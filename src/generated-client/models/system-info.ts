@@ -13,6 +13,7 @@
 
 
 import { Architecture } from './architecture';
+import { CastReceiverApplication } from './cast-receiver-application';
 import { FFmpegLocation } from './ffmpeg-location';
 import { InstallationInfo } from './installation-info';
 
@@ -50,6 +51,7 @@ export interface SystemInfo {
      * Gets or sets the operating system.
      * @type {string}
      * @memberof SystemInfo
+     * @deprecated
      */
     'OperatingSystem'?: string | null;
     /**
@@ -68,6 +70,7 @@ export interface SystemInfo {
      * Gets or sets the display name of the operating system.
      * @type {string}
      * @memberof SystemInfo
+     * @deprecated
      */
     'OperatingSystemDisplayName'?: string | null;
     /**
@@ -110,12 +113,14 @@ export interface SystemInfo {
      * Gets or sets a value indicating whether this instance can self restart.
      * @type {boolean}
      * @memberof SystemInfo
+     * @deprecated
      */
     'CanSelfRestart'?: boolean;
     /**
      * 
      * @type {boolean}
      * @memberof SystemInfo
+     * @deprecated
      */
     'CanLaunchWebBrowser'?: boolean;
     /**
@@ -160,6 +165,12 @@ export interface SystemInfo {
      * @memberof SystemInfo
      */
     'TranscodingTempPath'?: string | null;
+    /**
+     * Gets or sets the list of cast receiver applications.
+     * @type {Array<CastReceiverApplication>}
+     * @memberof SystemInfo
+     */
+    'CastReceiverApplications'?: Array<CastReceiverApplication> | null;
     /**
      * Gets or sets a value indicating whether this instance has update available.
      * @type {boolean}

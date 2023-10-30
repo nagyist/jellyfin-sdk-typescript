@@ -25,6 +25,7 @@ export const ItemFields = {
     CanDownload: 'CanDownload',
     ChannelInfo: 'ChannelInfo',
     Chapters: 'Chapters',
+    Trickplay: 'Trickplay',
     ChildCount: 'ChildCount',
     CumulativeRunTimeTicks: 'CumulativeRunTimeTicks',
     CustomRating: 'CustomRating',

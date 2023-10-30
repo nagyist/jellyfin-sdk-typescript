@@ -39,6 +39,12 @@ export interface LibraryOptions {
      * @type {boolean}
      * @memberof LibraryOptions
      */
+    'EnableLUFSScan'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
     'EnableChapterImageExtraction'?: boolean;
     /**
      * 
@@ -46,6 +52,18 @@ export interface LibraryOptions {
      * @memberof LibraryOptions
      */
     'ExtractChapterImagesDuringLibraryScan'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'EnableTrickplayImageExtraction'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'ExtractTrickplayImagesDuringLibraryScan'?: boolean;
     /**
      * 
      * @type {Array<MediaPathInfo>}
@@ -77,6 +95,12 @@ export interface LibraryOptions {
      * @memberof LibraryOptions
      */
     'EnableEmbeddedTitles'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'EnableEmbeddedExtrasTitles'?: boolean;
     /**
      * 
      * @type {boolean}

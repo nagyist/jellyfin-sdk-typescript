@@ -94,6 +94,12 @@ export interface SessionInfo {
      */
     'LastPlaybackCheckIn'?: string;
     /**
+     * Gets or sets the last paused date.
+     * @type {string}
+     * @memberof SessionInfo
+     */
+    'LastPausedDate'?: string | null;
+    /**
      * Gets or sets the name of the device.
      * @type {string}
      * @memberof SessionInfo

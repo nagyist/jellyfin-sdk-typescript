@@ -29,6 +29,7 @@ import { MetadataField } from './metadata-field';
 import { NameGuidPair } from './name-guid-pair';
 import { PlayAccess } from './play-access';
 import { ProgramAudio } from './program-audio';
+import { TrickplayInfo } from './trickplay-info';
 import { UserItemDataDto } from './user-item-data-dto';
 import { Video3DFormat } from './video3-dformat';
 import { VideoType } from './video-type';
@@ -129,6 +130,12 @@ export interface BaseItemDto {
      * @memberof BaseItemDto
      */
     'CanDownload'?: boolean | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BaseItemDto
+     */
+    'HasLyrics'?: boolean | null;
     /**
      * 
      * @type {boolean}
@@ -388,13 +395,13 @@ export interface BaseItemDto {
      */
     'GenreItems'?: Array<NameGuidPair> | null;
     /**
-     * Gets or sets wether the item has a logo, this will hold the Id of the Parent that has one.
+     * Gets or sets whether the item has a logo, this will hold the Id of the Parent that has one.
      * @type {string}
      * @memberof BaseItemDto
      */
     'ParentLogoItemId'?: string | null;
     /**
-     * Gets or sets wether the item has any backdrops, this will hold the Id of the Parent that has one.
+     * Gets or sets whether the item has any backdrops, this will hold the Id of the Parent that has one.
      * @type {string}
      * @memberof BaseItemDto
      */
@@ -604,7 +611,7 @@ export interface BaseItemDto {
      */
     'ParentLogoImageTag'?: string | null;
     /**
-     * Gets or sets wether the item has fan art, this will hold the Id of the Parent that has one.
+     * Gets or sets whether the item has fan art, this will hold the Id of the Parent that has one.
      * @type {string}
      * @memberof BaseItemDto
      */
@@ -663,6 +670,12 @@ export interface BaseItemDto {
      * @memberof BaseItemDto
      */
     'Chapters'?: Array<ChapterInfo> | null;
+    /**
+     * Gets or sets the trickplay manifest.
+     * @type {{ [key: string]: { [key: string]: TrickplayInfo; }; }}
+     * @memberof BaseItemDto
+     */
+    'Trickplay'?: { [key: string]: { [key: string]: TrickplayInfo; }; } | null;
     /**
      * 
      * @type {LocationType}
@@ -939,6 +952,12 @@ export interface BaseItemDto {
      * @memberof BaseItemDto
      */
     'TimerId'?: string | null;
+    /**
+     * Gets or sets the LUFS value.
+     * @type {number}
+     * @memberof BaseItemDto
+     */
+    'LUFS'?: number | null;
     /**
      * 
      * @type {BaseItemDto}
