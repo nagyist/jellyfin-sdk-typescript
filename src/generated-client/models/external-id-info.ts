@@ -12,7 +12,9 @@
  */
 
 
-import { ExternalIdMediaType } from './external-id-media-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ExternalIdMediaType } from './external-id-media-type';
 
 /**
  * Represents the external id information for serialization to the client.
@@ -42,7 +44,10 @@ export interface ExternalIdInfo {
      * Gets or sets the URL format string.
      * @type {string}
      * @memberof ExternalIdInfo
+     * @deprecated
      */
     'UrlFormatString'?: string | null;
 }
+
+
 

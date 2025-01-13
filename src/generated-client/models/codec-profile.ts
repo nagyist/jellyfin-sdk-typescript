@@ -12,11 +12,15 @@
  */
 
 
-import { CodecType } from './codec-type';
-import { ProfileCondition } from './profile-condition';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { CodecType } from './codec-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ProfileCondition } from './profile-condition';
 
 /**
- * 
+ * Defines the MediaBrowser.Model.Dlna.CodecProfile.
  * @export
  * @interface CodecProfile
  */
@@ -28,28 +32,36 @@ export interface CodecProfile {
      */
     'Type'?: CodecType;
     /**
-     * 
+     * Gets or sets the list of MediaBrowser.Model.Dlna.ProfileCondition which this profile must meet.
      * @type {Array<ProfileCondition>}
      * @memberof CodecProfile
      */
-    'Conditions'?: Array<ProfileCondition> | null;
+    'Conditions'?: Array<ProfileCondition>;
     /**
-     * 
+     * Gets or sets the list of MediaBrowser.Model.Dlna.ProfileCondition to apply if this profile is met.
      * @type {Array<ProfileCondition>}
      * @memberof CodecProfile
      */
-    'ApplyConditions'?: Array<ProfileCondition> | null;
+    'ApplyConditions'?: Array<ProfileCondition>;
     /**
-     * 
+     * Gets or sets the codec(s) that this profile applies to.
      * @type {string}
      * @memberof CodecProfile
      */
     'Codec'?: string | null;
     /**
-     * 
+     * Gets or sets the container(s) which this profile will be applied to.
      * @type {string}
      * @memberof CodecProfile
      */
     'Container'?: string | null;
+    /**
+     * Gets or sets the sub-container(s) which this profile will be applied to.
+     * @type {string}
+     * @memberof CodecProfile
+     */
+    'SubContainer'?: string | null;
 }
+
+
 

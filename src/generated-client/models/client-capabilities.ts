@@ -12,8 +12,15 @@
  */
 
 
-import { DeviceProfile } from './device-profile';
-import { GeneralCommandType } from './general-command-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { DeviceProfile } from './device-profile';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { GeneralCommandType } from './general-command-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaType } from './media-type';
 
 /**
  * 
@@ -23,10 +30,10 @@ import { GeneralCommandType } from './general-command-type';
 export interface ClientCapabilities {
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<MediaType>}
      * @memberof ClientCapabilities
      */
-    'PlayableMediaTypes'?: Array<string> | null;
+    'PlayableMediaTypes'?: Array<MediaType> | null;
     /**
      * 
      * @type {Array<GeneralCommandType>}
@@ -44,25 +51,7 @@ export interface ClientCapabilities {
      * @type {boolean}
      * @memberof ClientCapabilities
      */
-    'SupportsContentUploading'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ClientCapabilities
-     */
-    'MessageCallbackUrl'?: string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ClientCapabilities
-     */
     'SupportsPersistentIdentifier'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ClientCapabilities
-     */
-    'SupportsSync'?: boolean;
     /**
      * 
      * @type {DeviceProfile}
@@ -81,5 +70,19 @@ export interface ClientCapabilities {
      * @memberof ClientCapabilities
      */
     'IconUrl'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     * @deprecated
+     */
+    'SupportsContentUploading'?: boolean | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ClientCapabilities
+     * @deprecated
+     */
+    'SupportsSync'?: boolean | null;
 }
 

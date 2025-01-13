@@ -12,21 +12,22 @@
  */
 
 
-import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
-import { Configuration } from '../configuration';
+import type { Configuration } from '../configuration';
+import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../common';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
+import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import { ImageFormat } from '../models';
+import type { ImageFormat } from '../models';
 // @ts-ignore
-import { ImageInfo } from '../models';
+import type { ImageInfo } from '../models';
 // @ts-ignore
-import { ImageType } from '../models';
+import type { ImageType } from '../models';
 // @ts-ignore
-import { ProblemDetails } from '../models';
+import type { ProblemDetails } from '../models';
 /**
  * ImageApi - axios parameter creator
  * @export
@@ -39,7 +40,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCustomSplashscreen: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteCustomSplashscreen: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Branding/Splashscreen`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -75,7 +76,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteItemImage: async (itemId: string, imageType: ImageType, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteItemImage: async (itemId: string, imageType: ImageType, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('deleteItemImage', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -121,7 +122,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('deleteItemImageByIndex', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -160,20 +161,12 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Delete the user\'s image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} [index] (Unused) Image index.
+         * @param {string} [userId] User Id.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserImage: async (userId: string, imageType: ImageType, index?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('deleteUserImage', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('deleteUserImage', 'imageType', imageType)
-            const localVarPath = `/Users/{userId}/Images/{imageType}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)));
+        deleteUserImage: async (userId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/UserImage`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -188,54 +181,9 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
             // authentication CustomAuthentication required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-            if (index !== undefined) {
-                localVarQueryParameter['index'] = index;
+            if (userId !== undefined) {
+                localVarQueryParameter['userId'] = userId;
             }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Delete the user\'s image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} index (Unused) Image index.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserImageByIndex: async (userId: string, imageType: ImageType, index: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('deleteUserImageByIndex', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('deleteUserImageByIndex', 'imageType', imageType)
-            // verify required parameter 'index' is not null or undefined
-            assertParamExists('deleteUserImageByIndex', 'index', index)
-            const localVarPath = `/Users/{userId}/Images/{imageType}/{index}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)))
-                .replace(`{${"index"}}`, encodeURIComponent(String(index)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication CustomAuthentication required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -265,15 +213,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtistImage: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getArtistImage: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getArtistImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -339,14 +285,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -386,8 +324,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -395,7 +331,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getGenreImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -458,14 +394,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -510,15 +438,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getGenreImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -584,14 +510,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -628,9 +546,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -640,7 +556,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImage: async (itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getItemImage: async (itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('getItemImage', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -691,16 +607,8 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['tag'] = tag;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
             if (format !== undefined) {
                 localVarQueryParameter['format'] = format;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
             }
 
             if (percentPlayed !== undefined) {
@@ -755,15 +663,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImage2: async (itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getItemImage2: async (itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('getItemImage2', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -823,14 +729,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -868,9 +766,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -879,7 +775,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('getItemImageByIndex', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -933,16 +829,8 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['tag'] = tag;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
             if (format !== undefined) {
                 localVarQueryParameter['format'] = format;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
             }
 
             if (percentPlayed !== undefined) {
@@ -983,7 +871,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImageInfos: async (itemId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getItemImageInfos: async (itemId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('getItemImageInfos', 'itemId', itemId)
             const localVarPath = `/Items/{itemId}/Images`
@@ -1029,8 +917,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -1038,7 +924,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMusicGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getMusicGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getMusicGenreImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -1101,14 +987,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -1153,15 +1031,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMusicGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getMusicGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getMusicGenreImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -1227,14 +1103,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -1274,8 +1142,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -1283,7 +1149,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPersonImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getPersonImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getPersonImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -1346,14 +1212,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -1398,15 +1256,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPersonImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getPersonImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getPersonImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -1472,14 +1328,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -1521,7 +1369,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSplashscreen: async (tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, width?: number, height?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, quality?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getSplashscreen: async (tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, width?: number, height?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, quality?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Branding/Splashscreen`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1609,8 +1457,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -1618,7 +1464,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStudioImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getStudioImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getStudioImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -1681,14 +1527,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -1733,15 +1571,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStudioImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getStudioImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('getStudioImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -1807,14 +1643,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -1841,8 +1669,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
+         * @param {string} [userId] User id.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
          * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
          * @param {number} [maxWidth] The maximum image width to return.
@@ -1854,8 +1681,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -1863,14 +1688,8 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserImage: async (userId: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('getUserImage', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('getUserImage', 'imageType', imageType)
-            const localVarPath = `/Users/{userId}/Images/{imageType}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)));
+        getUserImage: async (userId?: string, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/UserImage`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1881,6 +1700,10 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (userId !== undefined) {
+                localVarQueryParameter['userId'] = userId;
+            }
 
             if (tag !== undefined) {
                 localVarQueryParameter['tag'] = tag;
@@ -1924,14 +1747,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
 
             if (fillHeight !== undefined) {
                 localVarQueryParameter['fillHeight'] = fillHeight;
-            }
-
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
             }
 
             if (blur !== undefined) {
@@ -1963,128 +1778,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserImageByIndex: async (userId: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('getUserImageByIndex', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('getUserImageByIndex', 'imageType', imageType)
-            // verify required parameter 'imageIndex' is not null or undefined
-            assertParamExists('getUserImageByIndex', 'imageIndex', imageIndex)
-            const localVarPath = `/Users/{userId}/Images/{imageType}/{imageIndex}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)))
-                .replace(`{${"imageIndex"}}`, encodeURIComponent(String(imageIndex)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (tag !== undefined) {
-                localVarQueryParameter['tag'] = tag;
-            }
-
-            if (format !== undefined) {
-                localVarQueryParameter['format'] = format;
-            }
-
-            if (maxWidth !== undefined) {
-                localVarQueryParameter['maxWidth'] = maxWidth;
-            }
-
-            if (maxHeight !== undefined) {
-                localVarQueryParameter['maxHeight'] = maxHeight;
-            }
-
-            if (percentPlayed !== undefined) {
-                localVarQueryParameter['percentPlayed'] = percentPlayed;
-            }
-
-            if (unplayedCount !== undefined) {
-                localVarQueryParameter['unplayedCount'] = unplayedCount;
-            }
-
-            if (width !== undefined) {
-                localVarQueryParameter['width'] = width;
-            }
-
-            if (height !== undefined) {
-                localVarQueryParameter['height'] = height;
-            }
-
-            if (quality !== undefined) {
-                localVarQueryParameter['quality'] = quality;
-            }
-
-            if (fillWidth !== undefined) {
-                localVarQueryParameter['fillWidth'] = fillWidth;
-            }
-
-            if (fillHeight !== undefined) {
-                localVarQueryParameter['fillHeight'] = fillHeight;
-            }
-
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
-            if (blur !== undefined) {
-                localVarQueryParameter['blur'] = blur;
-            }
-
-            if (backgroundColor !== undefined) {
-                localVarQueryParameter['backgroundColor'] = backgroundColor;
-            }
-
-            if (foregroundLayer !== undefined) {
-                localVarQueryParameter['foregroundLayer'] = foregroundLayer;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Get artist image by name.
          * @param {string} name Artist name.
          * @param {ImageType} imageType Image type.
@@ -2100,15 +1793,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headArtistImage: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headArtistImage: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headArtistImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -2174,14 +1865,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -2221,8 +1904,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -2230,7 +1911,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headGenreImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -2293,14 +1974,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -2345,15 +2018,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headGenreImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -2419,14 +2090,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -2463,9 +2126,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -2475,7 +2136,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headItemImage: async (itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headItemImage: async (itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('headItemImage', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -2526,16 +2187,8 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['tag'] = tag;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
             if (format !== undefined) {
                 localVarQueryParameter['format'] = format;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
             }
 
             if (percentPlayed !== undefined) {
@@ -2590,15 +2243,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headItemImage2: async (itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headItemImage2: async (itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('headItemImage2', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -2658,14 +2309,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -2703,9 +2346,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -2714,7 +2355,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('headItemImageByIndex', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -2768,16 +2409,8 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['tag'] = tag;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
             if (format !== undefined) {
                 localVarQueryParameter['format'] = format;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
             }
 
             if (percentPlayed !== undefined) {
@@ -2827,8 +2460,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -2836,7 +2467,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headMusicGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headMusicGenreImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headMusicGenreImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -2899,14 +2530,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -2951,15 +2574,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headMusicGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headMusicGenreImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headMusicGenreImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -3025,14 +2646,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -3072,8 +2685,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -3081,7 +2692,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headPersonImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headPersonImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headPersonImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -3144,14 +2755,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -3196,15 +2799,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headPersonImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headPersonImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headPersonImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -3270,14 +2871,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -3317,8 +2910,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -3326,7 +2917,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headStudioImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headStudioImage: async (name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headStudioImage', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -3389,14 +2980,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -3441,15 +3024,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headStudioImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        headStudioImageByIndex: async (name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('headStudioImageByIndex', 'name', name)
             // verify required parameter 'imageType' is not null or undefined
@@ -3515,14 +3096,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['fillHeight'] = fillHeight;
             }
 
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
             if (blur !== undefined) {
                 localVarQueryParameter['blur'] = blur;
             }
@@ -3549,8 +3122,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
+         * @param {string} [userId] User id.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
          * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
          * @param {number} [maxWidth] The maximum image width to return.
@@ -3562,8 +3134,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -3571,14 +3141,8 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headUserImage: async (userId: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('headUserImage', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('headUserImage', 'imageType', imageType)
-            const localVarPath = `/Users/{userId}/Images/{imageType}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)));
+        headUserImage: async (userId?: string, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/UserImage`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3589,6 +3153,10 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
             const localVarRequestOptions = { method: 'HEAD', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (userId !== undefined) {
+                localVarQueryParameter['userId'] = userId;
+            }
 
             if (tag !== undefined) {
                 localVarQueryParameter['tag'] = tag;
@@ -3632,14 +3200,6 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
 
             if (fillHeight !== undefined) {
                 localVarQueryParameter['fillHeight'] = fillHeight;
-            }
-
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
             }
 
             if (blur !== undefined) {
@@ -3671,144 +3231,14 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        headUserImageByIndex: async (userId: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('headUserImageByIndex', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('headUserImageByIndex', 'imageType', imageType)
-            // verify required parameter 'imageIndex' is not null or undefined
-            assertParamExists('headUserImageByIndex', 'imageIndex', imageIndex)
-            const localVarPath = `/Users/{userId}/Images/{imageType}/{imageIndex}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)))
-                .replace(`{${"imageIndex"}}`, encodeURIComponent(String(imageIndex)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'HEAD', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (tag !== undefined) {
-                localVarQueryParameter['tag'] = tag;
-            }
-
-            if (format !== undefined) {
-                localVarQueryParameter['format'] = format;
-            }
-
-            if (maxWidth !== undefined) {
-                localVarQueryParameter['maxWidth'] = maxWidth;
-            }
-
-            if (maxHeight !== undefined) {
-                localVarQueryParameter['maxHeight'] = maxHeight;
-            }
-
-            if (percentPlayed !== undefined) {
-                localVarQueryParameter['percentPlayed'] = percentPlayed;
-            }
-
-            if (unplayedCount !== undefined) {
-                localVarQueryParameter['unplayedCount'] = unplayedCount;
-            }
-
-            if (width !== undefined) {
-                localVarQueryParameter['width'] = width;
-            }
-
-            if (height !== undefined) {
-                localVarQueryParameter['height'] = height;
-            }
-
-            if (quality !== undefined) {
-                localVarQueryParameter['quality'] = quality;
-            }
-
-            if (fillWidth !== undefined) {
-                localVarQueryParameter['fillWidth'] = fillWidth;
-            }
-
-            if (fillHeight !== undefined) {
-                localVarQueryParameter['fillHeight'] = fillHeight;
-            }
-
-            if (cropWhitespace !== undefined) {
-                localVarQueryParameter['cropWhitespace'] = cropWhitespace;
-            }
-
-            if (addPlayedIndicator !== undefined) {
-                localVarQueryParameter['addPlayedIndicator'] = addPlayedIndicator;
-            }
-
-            if (blur !== undefined) {
-                localVarQueryParameter['blur'] = blur;
-            }
-
-            if (backgroundColor !== undefined) {
-                localVarQueryParameter['backgroundColor'] = backgroundColor;
-            }
-
-            if (foregroundLayer !== undefined) {
-                localVarQueryParameter['foregroundLayer'] = foregroundLayer;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Sets the user image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} [index] (Unused) Image index.
-         * @param {any} [body] 
+         * @param {string} [userId] User Id.
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUserImage: async (userId: string, imageType: ImageType, index?: number, body?: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('postUserImage', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('postUserImage', 'imageType', imageType)
-            const localVarPath = `/Users/{userId}/Images/{imageType}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)));
+        postUserImage: async (userId?: string, body?: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/UserImage`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3823,62 +3253,13 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
             // authentication CustomAuthentication required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-            if (index !== undefined) {
-                localVarQueryParameter['index'] = index;
+            if (userId !== undefined) {
+                localVarQueryParameter['userId'] = userId;
             }
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'image/_*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Sets the user image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} index (Unused) Image index.
-         * @param {any} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        postUserImageByIndex: async (userId: string, imageType: ImageType, index: number, body?: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('postUserImageByIndex', 'userId', userId)
-            // verify required parameter 'imageType' is not null or undefined
-            assertParamExists('postUserImageByIndex', 'imageType', imageType)
-            // verify required parameter 'index' is not null or undefined
-            assertParamExists('postUserImageByIndex', 'index', index)
-            const localVarPath = `/Users/{userId}/Images/{imageType}/{index}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"imageType"}}`, encodeURIComponent(String(imageType)))
-                .replace(`{${"index"}}`, encodeURIComponent(String(index)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication CustomAuthentication required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'image/_*';
+            localVarHeaderParameter['Content-Type'] = 'image/*';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3895,11 +3276,11 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @summary Set item image.
          * @param {string} itemId Item id.
          * @param {ImageType} imageType Image type.
-         * @param {any} [body] 
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setItemImage: async (itemId: string, imageType: ImageType, body?: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        setItemImage: async (itemId: string, imageType: ImageType, body?: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('setItemImage', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -3923,7 +3304,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'image/_*';
+            localVarHeaderParameter['Content-Type'] = 'image/*';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3941,11 +3322,11 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {string} itemId Item id.
          * @param {ImageType} imageType Image type.
          * @param {number} imageIndex (Unused) Image index.
-         * @param {any} [body] 
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, body?: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        setItemImageByIndex: async (itemId: string, imageType: ImageType, imageIndex: number, body?: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('setItemImageByIndex', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -3972,7 +3353,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'image/_*';
+            localVarHeaderParameter['Content-Type'] = 'image/*';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3994,7 +3375,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateItemImageIndex: async (itemId: string, imageType: ImageType, imageIndex: number, newIndex: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateItemImageIndex: async (itemId: string, imageType: ImageType, imageIndex: number, newIndex: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('updateItemImageIndex', 'itemId', itemId)
             // verify required parameter 'imageType' is not null or undefined
@@ -4039,11 +3420,11 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Uploads a custom splashscreen.  The body is expected to the image contents base64 encoded.
-         * @param {any} [body] 
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadCustomSplashscreen: async (body?: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        uploadCustomSplashscreen: async (body?: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/Branding/Splashscreen`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4061,7 +3442,7 @@ export const ImageApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'image/_*';
+            localVarHeaderParameter['Content-Type'] = 'image/*';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4089,9 +3470,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteCustomSplashscreen(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async deleteCustomSplashscreen(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCustomSplashscreen(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.deleteCustomSplashscreen']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4102,9 +3485,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteItemImage(itemId: string, imageType: ImageType, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async deleteItemImage(itemId: string, imageType: ImageType, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteItemImage(itemId, imageType, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.deleteItemImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4115,35 +3500,24 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async deleteItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteItemImageByIndex(itemId, imageType, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.deleteItemImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Delete the user\'s image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} [index] (Unused) Image index.
+         * @param {string} [userId] User Id.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteUserImage(userId: string, imageType: ImageType, index?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserImage(userId, imageType, index, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Delete the user\'s image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} index (Unused) Image index.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteUserImageByIndex(userId: string, imageType: ImageType, index: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserImageByIndex(userId, imageType, index, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async deleteUserImage(userId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserImage(userId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.deleteUserImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4162,17 +3536,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getArtistImage(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getArtistImage(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getArtistImage(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArtistImage(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getArtistImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4190,8 +3564,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4199,9 +3571,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getGenreImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4220,17 +3594,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getGenreImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4245,9 +3619,7 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -4257,9 +3629,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getItemImage(itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getItemImage(itemId, imageType, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getItemImage(itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getItemImage(itemId, imageType, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, format, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getItemImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4278,17 +3652,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getItemImage2(itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getItemImage2(itemId, imageType, maxWidth, maxHeight, tag, format, percentPlayed, unplayedCount, imageIndex, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getItemImage2(itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getItemImage2(itemId, imageType, maxWidth, maxHeight, tag, format, percentPlayed, unplayedCount, imageIndex, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getItemImage2']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4304,9 +3678,7 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -4315,9 +3687,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getItemImageByIndex(itemId, imageType, imageIndex, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getItemImageByIndex(itemId, imageType, imageIndex, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, format, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getItemImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4326,9 +3700,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getItemImageInfos(itemId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ImageInfo>>> {
+        async getItemImageInfos(itemId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ImageInfo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getItemImageInfos(itemId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getItemImageInfos']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4346,8 +3722,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4355,9 +3729,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMusicGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMusicGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getMusicGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMusicGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getMusicGenreImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4376,17 +3752,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMusicGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMusicGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getMusicGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMusicGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getMusicGenreImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4404,8 +3780,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4413,9 +3787,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPersonImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getPersonImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getPersonImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPersonImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getPersonImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4434,17 +3810,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPersonImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getPersonImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getPersonImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPersonImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getPersonImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4464,9 +3840,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSplashscreen(tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, width?: number, height?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, quality?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+        async getSplashscreen(tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, width?: number, height?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, quality?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSplashscreen(tag, format, maxWidth, maxHeight, width, height, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, quality, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getSplashscreen']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4484,8 +3862,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4493,9 +3869,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getStudioImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getStudioImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getStudioImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getStudioImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getStudioImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4514,23 +3892,22 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getStudioImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getStudioImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getStudioImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getStudioImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getStudioImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
+         * @param {string} [userId] User id.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
          * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
          * @param {number} [maxWidth] The maximum image width to return.
@@ -4542,8 +3919,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4551,38 +3926,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserImage(userId: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserImage(userId, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserImageByIndex(userId: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserImageByIndex(userId, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async getUserImage(userId?: string, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserImage(userId, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.getUserImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4601,17 +3949,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headArtistImage(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headArtistImage(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headArtistImage(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headArtistImage(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headArtistImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4629,8 +3977,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4638,9 +3984,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headGenreImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4659,17 +4007,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headGenreImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4684,9 +4032,7 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -4696,9 +4042,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headItemImage(itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headItemImage(itemId, imageType, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headItemImage(itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headItemImage(itemId, imageType, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, format, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headItemImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4717,17 +4065,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headItemImage2(itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headItemImage2(itemId, imageType, maxWidth, maxHeight, tag, format, percentPlayed, unplayedCount, imageIndex, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headItemImage2(itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headItemImage2(itemId, imageType, maxWidth, maxHeight, tag, format, percentPlayed, unplayedCount, imageIndex, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headItemImage2']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4743,9 +4091,7 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
          * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
          * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
          * @param {number} [blur] Optional. Blur image.
@@ -4754,9 +4100,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headItemImageByIndex(itemId, imageType, imageIndex, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, format?: ImageFormat, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headItemImageByIndex(itemId, imageType, imageIndex, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, format, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headItemImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4774,8 +4122,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4783,9 +4129,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headMusicGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headMusicGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headMusicGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headMusicGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headMusicGenreImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4804,17 +4152,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headMusicGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headMusicGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headMusicGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headMusicGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headMusicGenreImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4832,8 +4180,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4841,9 +4187,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headPersonImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headPersonImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headPersonImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headPersonImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headPersonImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4862,17 +4210,17 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headPersonImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headPersonImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headPersonImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headPersonImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headPersonImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4890,8 +4238,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4899,9 +4245,11 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headStudioImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headStudioImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headStudioImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headStudioImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headStudioImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4920,23 +4268,22 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headStudioImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headStudioImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headStudioImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headStudioImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headStudioImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
+         * @param {string} [userId] User id.
          * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
          * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
          * @param {number} [maxWidth] The maximum image width to return.
@@ -4948,8 +4295,6 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
          * @param {number} [fillWidth] Width of box to fill.
          * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
          * @param {number} [blur] Optional. Blur image.
          * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
          * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
@@ -4957,79 +4302,40 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async headUserImage(userId: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headUserImage(userId, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async headUserImageByIndex(userId: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.headUserImageByIndex(userId, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async headUserImage(userId?: string, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.headUserImage(userId, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, imageIndex, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.headUserImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Sets the user image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} [index] (Unused) Image index.
-         * @param {any} [body] 
+         * @param {string} [userId] User Id.
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postUserImage(userId: string, imageType: ImageType, index?: number, body?: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postUserImage(userId, imageType, index, body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Sets the user image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} index (Unused) Image index.
-         * @param {any} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async postUserImageByIndex(userId: string, imageType: ImageType, index: number, body?: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postUserImageByIndex(userId, imageType, index, body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async postUserImage(userId?: string, body?: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postUserImage(userId, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.postUserImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Set item image.
          * @param {string} itemId Item id.
          * @param {ImageType} imageType Image type.
-         * @param {any} [body] 
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async setItemImage(itemId: string, imageType: ImageType, body?: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async setItemImage(itemId: string, imageType: ImageType, body?: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.setItemImage(itemId, imageType, body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.setItemImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5037,13 +4343,15 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {string} itemId Item id.
          * @param {ImageType} imageType Image type.
          * @param {number} imageIndex (Unused) Image index.
-         * @param {any} [body] 
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async setItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, body?: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async setItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, body?: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.setItemImageByIndex(itemId, imageType, imageIndex, body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.setItemImageByIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5055,20 +4363,24 @@ export const ImageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateItemImageIndex(itemId: string, imageType: ImageType, imageIndex: number, newIndex: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async updateItemImageIndex(itemId: string, imageType: ImageType, imageIndex: number, newIndex: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateItemImageIndex(itemId, imageType, imageIndex, newIndex, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.updateItemImageIndex']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Uploads a custom splashscreen.  The body is expected to the image contents base64 encoded.
-         * @param {any} [body] 
+         * @param {File} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async uploadCustomSplashscreen(body?: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async uploadCustomSplashscreen(body?: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.uploadCustomSplashscreen(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageApi.uploadCustomSplashscreen']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
@@ -5086,945 +4398,368 @@ export const ImageApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCustomSplashscreen(options?: any): AxiosPromise<void> {
+        deleteCustomSplashscreen(options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.deleteCustomSplashscreen(options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Delete an item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} [imageIndex] The image index.
+         * @param {ImageApiDeleteItemImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteItemImage(itemId: string, imageType: ImageType, imageIndex?: number, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteItemImage(itemId, imageType, imageIndex, options).then((request) => request(axios, basePath));
+        deleteItemImage(requestParameters: ImageApiDeleteItemImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Delete an item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex The image index.
+         * @param {ImageApiDeleteItemImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteItemImageByIndex(itemId, imageType, imageIndex, options).then((request) => request(axios, basePath));
+        deleteItemImageByIndex(requestParameters: ImageApiDeleteItemImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Delete the user\'s image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} [index] (Unused) Image index.
+         * @param {ImageApiDeleteUserImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserImage(userId: string, imageType: ImageType, index?: number, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteUserImage(userId, imageType, index, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Delete the user\'s image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} index (Unused) Image index.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserImageByIndex(userId: string, imageType: ImageType, index: number, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteUserImageByIndex(userId, imageType, index, options).then((request) => request(axios, basePath));
+        deleteUserImage(requestParameters: ImageApiDeleteUserImageRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteUserImage(requestParameters.userId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get artist image by name.
-         * @param {string} name Artist name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiGetArtistImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtistImage(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getArtistImage(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getArtistImage(requestParameters: ImageApiGetArtistImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getArtistImage(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get genre image by name.
-         * @param {string} name Genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiGetGenreImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.getGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        getGenreImage(requestParameters: ImageApiGetGenreImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get genre image by name.
-         * @param {string} name Genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiGetGenreImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getGenreImageByIndex(requestParameters: ImageApiGetGenreImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Gets the item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiGetItemImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImage(itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.getItemImage(itemId, imageType, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        getItemImage(requestParameters: ImageApiGetItemImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Gets the item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} maxWidth The maximum image width to return.
-         * @param {number} maxHeight The maximum image height to return.
-         * @param {string} tag Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} format Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} percentPlayed Optional. Percent to render for the percent played overlay.
-         * @param {number} unplayedCount Optional. Unplayed count overlay to render.
-         * @param {number} imageIndex Image index.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiGetItemImage2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImage2(itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getItemImage2(itemId, imageType, maxWidth, maxHeight, tag, format, percentPlayed, unplayedCount, imageIndex, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getItemImage2(requestParameters: ImageApiGetItemImage2Request, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getItemImage2(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.imageIndex, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Gets the item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiGetItemImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getItemImageByIndex(itemId, imageType, imageIndex, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getItemImageByIndex(requestParameters: ImageApiGetItemImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get item image infos.
-         * @param {string} itemId Item id.
+         * @param {ImageApiGetItemImageInfosRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getItemImageInfos(itemId: string, options?: any): AxiosPromise<Array<ImageInfo>> {
-            return localVarFp.getItemImageInfos(itemId, options).then((request) => request(axios, basePath));
+        getItemImageInfos(requestParameters: ImageApiGetItemImageInfosRequest, options?: RawAxiosRequestConfig): AxiosPromise<Array<ImageInfo>> {
+            return localVarFp.getItemImageInfos(requestParameters.itemId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get music genre image by name.
-         * @param {string} name Music genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiGetMusicGenreImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMusicGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.getMusicGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        getMusicGenreImage(requestParameters: ImageApiGetMusicGenreImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getMusicGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get music genre image by name.
-         * @param {string} name Music genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiGetMusicGenreImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMusicGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getMusicGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getMusicGenreImageByIndex(requestParameters: ImageApiGetMusicGenreImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getMusicGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get person image by name.
-         * @param {string} name Person name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiGetPersonImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPersonImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.getPersonImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        getPersonImage(requestParameters: ImageApiGetPersonImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getPersonImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get person image by name.
-         * @param {string} name Person name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiGetPersonImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPersonImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getPersonImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getPersonImageByIndex(requestParameters: ImageApiGetPersonImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getPersonImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Generates or gets the splashscreen.
-         * @param {string} [tag] Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {number} [blur] Blur image.
-         * @param {string} [backgroundColor] Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Apply a foreground layer on top of the image.
-         * @param {number} [quality] Quality setting, from 0-100.
+         * @param {ImageApiGetSplashscreenRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSplashscreen(tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, width?: number, height?: number, fillWidth?: number, fillHeight?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, quality?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.getSplashscreen(tag, format, maxWidth, maxHeight, width, height, fillWidth, fillHeight, blur, backgroundColor, foregroundLayer, quality, options).then((request) => request(axios, basePath));
+        getSplashscreen(requestParameters: ImageApiGetSplashscreenRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getSplashscreen(requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.quality, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get studio image by name.
-         * @param {string} name Studio name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiGetStudioImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStudioImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.getStudioImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        getStudioImage(requestParameters: ImageApiGetStudioImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getStudioImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get studio image by name.
-         * @param {string} name Studio name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiGetStudioImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStudioImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getStudioImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getStudioImageByIndex(requestParameters: ImageApiGetStudioImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getStudioImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiGetUserImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserImage(userId: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.getUserImage(userId, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserImageByIndex(userId: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.getUserImageByIndex(userId, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        getUserImage(requestParameters: ImageApiGetUserImageRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getUserImage(requestParameters.userId, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get artist image by name.
-         * @param {string} name Artist name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiHeadArtistImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headArtistImage(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headArtistImage(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headArtistImage(requestParameters: ImageApiHeadArtistImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headArtistImage(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get genre image by name.
-         * @param {string} name Genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiHeadGenreImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.headGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        headGenreImage(requestParameters: ImageApiHeadGenreImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get genre image by name.
-         * @param {string} name Genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiHeadGenreImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headGenreImageByIndex(requestParameters: ImageApiHeadGenreImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Gets the item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiHeadItemImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headItemImage(itemId: string, imageType: ImageType, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.headItemImage(itemId, imageType, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        headItemImage(requestParameters: ImageApiHeadItemImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Gets the item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} maxWidth The maximum image width to return.
-         * @param {number} maxHeight The maximum image height to return.
-         * @param {string} tag Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} format Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} percentPlayed Optional. Percent to render for the percent played overlay.
-         * @param {number} unplayedCount Optional. Unplayed count overlay to render.
-         * @param {number} imageIndex Image index.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiHeadItemImage2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headItemImage2(itemId: string, imageType: ImageType, maxWidth: number, maxHeight: number, tag: string, format: ImageFormat, percentPlayed: number, unplayedCount: number, imageIndex: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headItemImage2(itemId, imageType, maxWidth, maxHeight, tag, format, percentPlayed, unplayedCount, imageIndex, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headItemImage2(requestParameters: ImageApiHeadItemImage2Request, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headItemImage2(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.imageIndex, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Gets the item\'s image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {ImageFormat} [format] Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiHeadItemImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, maxWidth?: number, maxHeight?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, tag?: string, cropWhitespace?: boolean, format?: ImageFormat, addPlayedIndicator?: boolean, percentPlayed?: number, unplayedCount?: number, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headItemImageByIndex(itemId, imageType, imageIndex, maxWidth, maxHeight, width, height, quality, fillWidth, fillHeight, tag, cropWhitespace, format, addPlayedIndicator, percentPlayed, unplayedCount, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headItemImageByIndex(requestParameters: ImageApiHeadItemImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get music genre image by name.
-         * @param {string} name Music genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiHeadMusicGenreImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headMusicGenreImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.headMusicGenreImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        headMusicGenreImage(requestParameters: ImageApiHeadMusicGenreImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headMusicGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get music genre image by name.
-         * @param {string} name Music genre name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiHeadMusicGenreImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headMusicGenreImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headMusicGenreImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headMusicGenreImageByIndex(requestParameters: ImageApiHeadMusicGenreImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headMusicGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get person image by name.
-         * @param {string} name Person name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiHeadPersonImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headPersonImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.headPersonImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        headPersonImage(requestParameters: ImageApiHeadPersonImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headPersonImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get person image by name.
-         * @param {string} name Person name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiHeadPersonImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headPersonImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headPersonImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headPersonImageByIndex(requestParameters: ImageApiHeadPersonImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headPersonImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get studio image by name.
-         * @param {string} name Studio name.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiHeadStudioImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headStudioImage(name: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.headStudioImage(name, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
+        headStudioImage(requestParameters: ImageApiHeadStudioImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headStudioImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get studio image by name.
-         * @param {string} name Studio name.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
+         * @param {ImageApiHeadStudioImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headStudioImageByIndex(name: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headStudioImageByIndex(name, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headStudioImageByIndex(requestParameters: ImageApiHeadStudioImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headStudioImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {number} [imageIndex] Image index.
+         * @param {ImageApiHeadUserImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        headUserImage(userId: string, imageType: ImageType, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, imageIndex?: number, options?: any): AxiosPromise<any> {
-            return localVarFp.headUserImage(userId, imageType, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, imageIndex, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Get user profile image.
-         * @param {string} userId User id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Image index.
-         * @param {string} [tag] Optional. Supply the cache tag from the item object to receive strong caching headers.
-         * @param {ImageFormat} [format] Determines the output format of the image - original,gif,jpg,png.
-         * @param {number} [maxWidth] The maximum image width to return.
-         * @param {number} [maxHeight] The maximum image height to return.
-         * @param {number} [percentPlayed] Optional. Percent to render for the percent played overlay.
-         * @param {number} [unplayedCount] Optional. Unplayed count overlay to render.
-         * @param {number} [width] The fixed image width to return.
-         * @param {number} [height] The fixed image height to return.
-         * @param {number} [quality] Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-         * @param {number} [fillWidth] Width of box to fill.
-         * @param {number} [fillHeight] Height of box to fill.
-         * @param {boolean} [cropWhitespace] Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-         * @param {boolean} [addPlayedIndicator] Optional. Add a played indicator.
-         * @param {number} [blur] Optional. Blur image.
-         * @param {string} [backgroundColor] Optional. Apply a background color for transparent images.
-         * @param {string} [foregroundLayer] Optional. Apply a foreground layer on top of the image.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        headUserImageByIndex(userId: string, imageType: ImageType, imageIndex: number, tag?: string, format?: ImageFormat, maxWidth?: number, maxHeight?: number, percentPlayed?: number, unplayedCount?: number, width?: number, height?: number, quality?: number, fillWidth?: number, fillHeight?: number, cropWhitespace?: boolean, addPlayedIndicator?: boolean, blur?: number, backgroundColor?: string, foregroundLayer?: string, options?: any): AxiosPromise<any> {
-            return localVarFp.headUserImageByIndex(userId, imageType, imageIndex, tag, format, maxWidth, maxHeight, percentPlayed, unplayedCount, width, height, quality, fillWidth, fillHeight, cropWhitespace, addPlayedIndicator, blur, backgroundColor, foregroundLayer, options).then((request) => request(axios, basePath));
+        headUserImage(requestParameters: ImageApiHeadUserImageRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.headUserImage(requestParameters.userId, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Sets the user image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} [index] (Unused) Image index.
-         * @param {any} [body] 
+         * @param {ImageApiPostUserImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUserImage(userId: string, imageType: ImageType, index?: number, body?: any, options?: any): AxiosPromise<void> {
-            return localVarFp.postUserImage(userId, imageType, index, body, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Sets the user image.
-         * @param {string} userId User Id.
-         * @param {ImageType} imageType (Unused) Image type.
-         * @param {number} index (Unused) Image index.
-         * @param {any} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        postUserImageByIndex(userId: string, imageType: ImageType, index: number, body?: any, options?: any): AxiosPromise<void> {
-            return localVarFp.postUserImageByIndex(userId, imageType, index, body, options).then((request) => request(axios, basePath));
+        postUserImage(requestParameters: ImageApiPostUserImageRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.postUserImage(requestParameters.userId, requestParameters.body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Set item image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {any} [body] 
+         * @param {ImageApiSetItemImageRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setItemImage(itemId: string, imageType: ImageType, body?: any, options?: any): AxiosPromise<void> {
-            return localVarFp.setItemImage(itemId, imageType, body, options).then((request) => request(axios, basePath));
+        setItemImage(requestParameters: ImageApiSetItemImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.setItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Set item image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex (Unused) Image index.
-         * @param {any} [body] 
+         * @param {ImageApiSetItemImageByIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setItemImageByIndex(itemId: string, imageType: ImageType, imageIndex: number, body?: any, options?: any): AxiosPromise<void> {
-            return localVarFp.setItemImageByIndex(itemId, imageType, imageIndex, body, options).then((request) => request(axios, basePath));
+        setItemImageByIndex(requestParameters: ImageApiSetItemImageByIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.setItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Updates the index for an item image.
-         * @param {string} itemId Item id.
-         * @param {ImageType} imageType Image type.
-         * @param {number} imageIndex Old image index.
-         * @param {number} newIndex New image index.
+         * @param {ImageApiUpdateItemImageIndexRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateItemImageIndex(itemId: string, imageType: ImageType, imageIndex: number, newIndex: number, options?: any): AxiosPromise<void> {
-            return localVarFp.updateItemImageIndex(itemId, imageType, imageIndex, newIndex, options).then((request) => request(axios, basePath));
+        updateItemImageIndex(requestParameters: ImageApiUpdateItemImageIndexRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updateItemImageIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.newIndex, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Uploads a custom splashscreen.  The body is expected to the image contents base64 encoded.
-         * @param {any} [body] 
+         * @param {ImageApiUploadCustomSplashscreenRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadCustomSplashscreen(body?: any, options?: any): AxiosPromise<void> {
-            return localVarFp.uploadCustomSplashscreen(body, options).then((request) => request(axios, basePath));
+        uploadCustomSplashscreen(requestParameters: ImageApiUploadCustomSplashscreenRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.uploadCustomSplashscreen(requestParameters.body, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -6096,49 +4831,7 @@ export interface ImageApiDeleteUserImageRequest {
      * @type {string}
      * @memberof ImageApiDeleteUserImage
      */
-    readonly userId: string
-
-    /**
-     * (Unused) Image type.
-     * @type {ImageType}
-     * @memberof ImageApiDeleteUserImage
-     */
-    readonly imageType: ImageType
-
-    /**
-     * (Unused) Image index.
-     * @type {number}
-     * @memberof ImageApiDeleteUserImage
-     */
-    readonly index?: number
-}
-
-/**
- * Request parameters for deleteUserImageByIndex operation in ImageApi.
- * @export
- * @interface ImageApiDeleteUserImageByIndexRequest
- */
-export interface ImageApiDeleteUserImageByIndexRequest {
-    /**
-     * User Id.
-     * @type {string}
-     * @memberof ImageApiDeleteUserImageByIndex
-     */
-    readonly userId: string
-
-    /**
-     * (Unused) Image type.
-     * @type {ImageType}
-     * @memberof ImageApiDeleteUserImageByIndex
-     */
-    readonly imageType: ImageType
-
-    /**
-     * (Unused) Image index.
-     * @type {number}
-     * @memberof ImageApiDeleteUserImageByIndex
-     */
-    readonly index: number
+    readonly userId?: string
 }
 
 /**
@@ -6244,20 +4937,6 @@ export interface ImageApiGetArtistImageRequest {
      * @memberof ImageApiGetArtistImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetArtistImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetArtistImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -6377,20 +5056,6 @@ export interface ImageApiGetGenreImageRequest {
      * @memberof ImageApiGetGenreImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetGenreImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetGenreImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -6526,20 +5191,6 @@ export interface ImageApiGetGenreImageByIndexRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetGenreImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetGenreImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiGetGenreImageByIndex
@@ -6638,25 +5289,11 @@ export interface ImageApiGetItemImageRequest {
     readonly tag?: string
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetItemImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
      * Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
      * @type {ImageFormat}
      * @memberof ImageApiGetItemImage
      */
     readonly format?: ImageFormat
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetItemImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Percent to render for the percent played overlay.
@@ -6806,20 +5443,6 @@ export interface ImageApiGetItemImage2Request {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetItemImage2
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetItemImage2
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiGetItemImage2
@@ -6925,25 +5548,11 @@ export interface ImageApiGetItemImageByIndexRequest {
     readonly tag?: string
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetItemImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
      * Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
      * @type {ImageFormat}
      * @memberof ImageApiGetItemImageByIndex
      */
     readonly format?: ImageFormat
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetItemImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Percent to render for the percent played overlay.
@@ -7093,20 +5702,6 @@ export interface ImageApiGetMusicGenreImageRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetMusicGenreImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetMusicGenreImage
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiGetMusicGenreImage
@@ -7240,20 +5835,6 @@ export interface ImageApiGetMusicGenreImageByIndexRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetMusicGenreImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetMusicGenreImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiGetMusicGenreImageByIndex
@@ -7371,20 +5952,6 @@ export interface ImageApiGetPersonImageRequest {
      * @memberof ImageApiGetPersonImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetPersonImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetPersonImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -7518,20 +6085,6 @@ export interface ImageApiGetPersonImageByIndexRequest {
      * @memberof ImageApiGetPersonImageByIndex
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetPersonImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetPersonImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -7744,20 +6297,6 @@ export interface ImageApiGetStudioImageRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetStudioImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetStudioImage
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiGetStudioImage
@@ -7891,20 +6430,6 @@ export interface ImageApiGetStudioImageByIndexRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetStudioImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetStudioImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiGetStudioImageByIndex
@@ -7937,14 +6462,7 @@ export interface ImageApiGetUserImageRequest {
      * @type {string}
      * @memberof ImageApiGetUserImage
      */
-    readonly userId: string
-
-    /**
-     * Image type.
-     * @type {ImageType}
-     * @memberof ImageApiGetUserImage
-     */
-    readonly imageType: ImageType
+    readonly userId?: string
 
     /**
      * Optional. Supply the cache tag from the item object to receive strong caching headers.
@@ -8022,20 +6540,6 @@ export interface ImageApiGetUserImageRequest {
      * @memberof ImageApiGetUserImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetUserImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetUserImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -8064,146 +6568,6 @@ export interface ImageApiGetUserImageRequest {
      * @memberof ImageApiGetUserImage
      */
     readonly imageIndex?: number
-}
-
-/**
- * Request parameters for getUserImageByIndex operation in ImageApi.
- * @export
- * @interface ImageApiGetUserImageByIndexRequest
- */
-export interface ImageApiGetUserImageByIndexRequest {
-    /**
-     * User id.
-     * @type {string}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly userId: string
-
-    /**
-     * Image type.
-     * @type {ImageType}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly imageType: ImageType
-
-    /**
-     * Image index.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly imageIndex: number
-
-    /**
-     * Optional. Supply the cache tag from the item object to receive strong caching headers.
-     * @type {string}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly tag?: string
-
-    /**
-     * Determines the output format of the image - original,gif,jpg,png.
-     * @type {ImageFormat}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly format?: ImageFormat
-
-    /**
-     * The maximum image width to return.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly maxWidth?: number
-
-    /**
-     * The maximum image height to return.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly maxHeight?: number
-
-    /**
-     * Optional. Percent to render for the percent played overlay.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly percentPlayed?: number
-
-    /**
-     * Optional. Unplayed count overlay to render.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly unplayedCount?: number
-
-    /**
-     * The fixed image width to return.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly width?: number
-
-    /**
-     * The fixed image height to return.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly height?: number
-
-    /**
-     * Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly quality?: number
-
-    /**
-     * Width of box to fill.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly fillWidth?: number
-
-    /**
-     * Height of box to fill.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
-     * Optional. Blur image.
-     * @type {number}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly blur?: number
-
-    /**
-     * Optional. Apply a background color for transparent images.
-     * @type {string}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly backgroundColor?: string
-
-    /**
-     * Optional. Apply a foreground layer on top of the image.
-     * @type {string}
-     * @memberof ImageApiGetUserImageByIndex
-     */
-    readonly foregroundLayer?: string
 }
 
 /**
@@ -8309,20 +6673,6 @@ export interface ImageApiHeadArtistImageRequest {
      * @memberof ImageApiHeadArtistImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadArtistImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadArtistImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -8442,20 +6792,6 @@ export interface ImageApiHeadGenreImageRequest {
      * @memberof ImageApiHeadGenreImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadGenreImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadGenreImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -8591,20 +6927,6 @@ export interface ImageApiHeadGenreImageByIndexRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadGenreImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadGenreImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiHeadGenreImageByIndex
@@ -8703,25 +7025,11 @@ export interface ImageApiHeadItemImageRequest {
     readonly tag?: string
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadItemImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
      * Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
      * @type {ImageFormat}
      * @memberof ImageApiHeadItemImage
      */
     readonly format?: ImageFormat
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadItemImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Percent to render for the percent played overlay.
@@ -8871,20 +7179,6 @@ export interface ImageApiHeadItemImage2Request {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadItemImage2
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadItemImage2
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiHeadItemImage2
@@ -8990,25 +7284,11 @@ export interface ImageApiHeadItemImageByIndexRequest {
     readonly tag?: string
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadItemImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
      * Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.
      * @type {ImageFormat}
      * @memberof ImageApiHeadItemImageByIndex
      */
     readonly format?: ImageFormat
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadItemImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Percent to render for the percent played overlay.
@@ -9144,20 +7424,6 @@ export interface ImageApiHeadMusicGenreImageRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadMusicGenreImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadMusicGenreImage
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiHeadMusicGenreImage
@@ -9291,20 +7557,6 @@ export interface ImageApiHeadMusicGenreImageByIndexRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadMusicGenreImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadMusicGenreImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiHeadMusicGenreImageByIndex
@@ -9422,20 +7674,6 @@ export interface ImageApiHeadPersonImageRequest {
      * @memberof ImageApiHeadPersonImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadPersonImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadPersonImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -9571,20 +7809,6 @@ export interface ImageApiHeadPersonImageByIndexRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadPersonImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadPersonImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiHeadPersonImageByIndex
@@ -9702,20 +7926,6 @@ export interface ImageApiHeadStudioImageRequest {
      * @memberof ImageApiHeadStudioImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadStudioImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadStudioImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -9851,20 +8061,6 @@ export interface ImageApiHeadStudioImageByIndexRequest {
     readonly fillHeight?: number
 
     /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadStudioImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadStudioImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
      * Optional. Blur image.
      * @type {number}
      * @memberof ImageApiHeadStudioImageByIndex
@@ -9897,14 +8093,7 @@ export interface ImageApiHeadUserImageRequest {
      * @type {string}
      * @memberof ImageApiHeadUserImage
      */
-    readonly userId: string
-
-    /**
-     * Image type.
-     * @type {ImageType}
-     * @memberof ImageApiHeadUserImage
-     */
-    readonly imageType: ImageType
+    readonly userId?: string
 
     /**
      * Optional. Supply the cache tag from the item object to receive strong caching headers.
@@ -9982,20 +8171,6 @@ export interface ImageApiHeadUserImageRequest {
      * @memberof ImageApiHeadUserImage
      */
     readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadUserImage
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadUserImage
-     */
-    readonly addPlayedIndicator?: boolean
 
     /**
      * Optional. Blur image.
@@ -10027,146 +8202,6 @@ export interface ImageApiHeadUserImageRequest {
 }
 
 /**
- * Request parameters for headUserImageByIndex operation in ImageApi.
- * @export
- * @interface ImageApiHeadUserImageByIndexRequest
- */
-export interface ImageApiHeadUserImageByIndexRequest {
-    /**
-     * User id.
-     * @type {string}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly userId: string
-
-    /**
-     * Image type.
-     * @type {ImageType}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly imageType: ImageType
-
-    /**
-     * Image index.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly imageIndex: number
-
-    /**
-     * Optional. Supply the cache tag from the item object to receive strong caching headers.
-     * @type {string}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly tag?: string
-
-    /**
-     * Determines the output format of the image - original,gif,jpg,png.
-     * @type {ImageFormat}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly format?: ImageFormat
-
-    /**
-     * The maximum image width to return.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly maxWidth?: number
-
-    /**
-     * The maximum image height to return.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly maxHeight?: number
-
-    /**
-     * Optional. Percent to render for the percent played overlay.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly percentPlayed?: number
-
-    /**
-     * Optional. Unplayed count overlay to render.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly unplayedCount?: number
-
-    /**
-     * The fixed image width to return.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly width?: number
-
-    /**
-     * The fixed image height to return.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly height?: number
-
-    /**
-     * Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly quality?: number
-
-    /**
-     * Width of box to fill.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly fillWidth?: number
-
-    /**
-     * Height of box to fill.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly fillHeight?: number
-
-    /**
-     * Optional. Specify if whitespace should be cropped out of the image. True/False. If unspecified, whitespace will be cropped from logos and clear art.
-     * @type {boolean}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly cropWhitespace?: boolean
-
-    /**
-     * Optional. Add a played indicator.
-     * @type {boolean}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly addPlayedIndicator?: boolean
-
-    /**
-     * Optional. Blur image.
-     * @type {number}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly blur?: number
-
-    /**
-     * Optional. Apply a background color for transparent images.
-     * @type {string}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly backgroundColor?: string
-
-    /**
-     * Optional. Apply a foreground layer on top of the image.
-     * @type {string}
-     * @memberof ImageApiHeadUserImageByIndex
-     */
-    readonly foregroundLayer?: string
-}
-
-/**
  * Request parameters for postUserImage operation in ImageApi.
  * @export
  * @interface ImageApiPostUserImageRequest
@@ -10177,63 +8212,14 @@ export interface ImageApiPostUserImageRequest {
      * @type {string}
      * @memberof ImageApiPostUserImage
      */
-    readonly userId: string
-
-    /**
-     * (Unused) Image type.
-     * @type {ImageType}
-     * @memberof ImageApiPostUserImage
-     */
-    readonly imageType: ImageType
-
-    /**
-     * (Unused) Image index.
-     * @type {number}
-     * @memberof ImageApiPostUserImage
-     */
-    readonly index?: number
+    readonly userId?: string
 
     /**
      * 
-     * @type {any}
+     * @type {File}
      * @memberof ImageApiPostUserImage
      */
-    readonly body?: any
-}
-
-/**
- * Request parameters for postUserImageByIndex operation in ImageApi.
- * @export
- * @interface ImageApiPostUserImageByIndexRequest
- */
-export interface ImageApiPostUserImageByIndexRequest {
-    /**
-     * User Id.
-     * @type {string}
-     * @memberof ImageApiPostUserImageByIndex
-     */
-    readonly userId: string
-
-    /**
-     * (Unused) Image type.
-     * @type {ImageType}
-     * @memberof ImageApiPostUserImageByIndex
-     */
-    readonly imageType: ImageType
-
-    /**
-     * (Unused) Image index.
-     * @type {number}
-     * @memberof ImageApiPostUserImageByIndex
-     */
-    readonly index: number
-
-    /**
-     * 
-     * @type {any}
-     * @memberof ImageApiPostUserImageByIndex
-     */
-    readonly body?: any
+    readonly body?: File
 }
 
 /**
@@ -10258,10 +8244,10 @@ export interface ImageApiSetItemImageRequest {
 
     /**
      * 
-     * @type {any}
+     * @type {File}
      * @memberof ImageApiSetItemImage
      */
-    readonly body?: any
+    readonly body?: File
 }
 
 /**
@@ -10293,10 +8279,10 @@ export interface ImageApiSetItemImageByIndexRequest {
 
     /**
      * 
-     * @type {any}
+     * @type {File}
      * @memberof ImageApiSetItemImageByIndex
      */
-    readonly body?: any
+    readonly body?: File
 }
 
 /**
@@ -10342,10 +8328,10 @@ export interface ImageApiUpdateItemImageIndexRequest {
 export interface ImageApiUploadCustomSplashscreenRequest {
     /**
      * 
-     * @type {any}
+     * @type {File}
      * @memberof ImageApiUploadCustomSplashscreen
      */
-    readonly body?: any
+    readonly body?: File
 }
 
 /**
@@ -10362,7 +8348,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public deleteCustomSplashscreen(options?: AxiosRequestConfig) {
+    public deleteCustomSplashscreen(options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).deleteCustomSplashscreen(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10374,7 +8360,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public deleteItemImage(requestParameters: ImageApiDeleteItemImageRequest, options?: AxiosRequestConfig) {
+    public deleteItemImage(requestParameters: ImageApiDeleteItemImageRequest, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).deleteItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10386,7 +8372,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public deleteItemImageByIndex(requestParameters: ImageApiDeleteItemImageByIndexRequest, options?: AxiosRequestConfig) {
+    public deleteItemImageByIndex(requestParameters: ImageApiDeleteItemImageByIndexRequest, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).deleteItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10398,20 +8384,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public deleteUserImage(requestParameters: ImageApiDeleteUserImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).deleteUserImage(requestParameters.userId, requestParameters.imageType, requestParameters.index, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Delete the user\'s image.
-     * @param {ImageApiDeleteUserImageByIndexRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ImageApi
-     */
-    public deleteUserImageByIndex(requestParameters: ImageApiDeleteUserImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).deleteUserImageByIndex(requestParameters.userId, requestParameters.imageType, requestParameters.index, options).then((request) => request(this.axios, this.basePath));
+    public deleteUserImage(requestParameters: ImageApiDeleteUserImageRequest = {}, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).deleteUserImage(requestParameters.userId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10422,8 +8396,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getArtistImage(requestParameters: ImageApiGetArtistImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getArtistImage(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getArtistImage(requestParameters: ImageApiGetArtistImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getArtistImage(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10434,8 +8408,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getGenreImage(requestParameters: ImageApiGetGenreImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public getGenreImage(requestParameters: ImageApiGetGenreImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10446,8 +8420,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getGenreImageByIndex(requestParameters: ImageApiGetGenreImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getGenreImageByIndex(requestParameters: ImageApiGetGenreImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10458,8 +8432,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getItemImage(requestParameters: ImageApiGetItemImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.cropWhitespace, requestParameters.format, requestParameters.addPlayedIndicator, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public getItemImage(requestParameters: ImageApiGetItemImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10470,8 +8444,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getItemImage2(requestParameters: ImageApiGetItemImage2Request, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getItemImage2(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.imageIndex, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getItemImage2(requestParameters: ImageApiGetItemImage2Request, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getItemImage2(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.imageIndex, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10482,8 +8456,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getItemImageByIndex(requestParameters: ImageApiGetItemImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.cropWhitespace, requestParameters.format, requestParameters.addPlayedIndicator, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getItemImageByIndex(requestParameters: ImageApiGetItemImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10494,7 +8468,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getItemImageInfos(requestParameters: ImageApiGetItemImageInfosRequest, options?: AxiosRequestConfig) {
+    public getItemImageInfos(requestParameters: ImageApiGetItemImageInfosRequest, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).getItemImageInfos(requestParameters.itemId, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10506,8 +8480,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getMusicGenreImage(requestParameters: ImageApiGetMusicGenreImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getMusicGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public getMusicGenreImage(requestParameters: ImageApiGetMusicGenreImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getMusicGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10518,8 +8492,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getMusicGenreImageByIndex(requestParameters: ImageApiGetMusicGenreImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getMusicGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getMusicGenreImageByIndex(requestParameters: ImageApiGetMusicGenreImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getMusicGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10530,8 +8504,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getPersonImage(requestParameters: ImageApiGetPersonImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getPersonImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public getPersonImage(requestParameters: ImageApiGetPersonImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getPersonImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10542,8 +8516,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getPersonImageByIndex(requestParameters: ImageApiGetPersonImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getPersonImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getPersonImageByIndex(requestParameters: ImageApiGetPersonImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getPersonImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10554,7 +8528,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getSplashscreen(requestParameters: ImageApiGetSplashscreenRequest = {}, options?: AxiosRequestConfig) {
+    public getSplashscreen(requestParameters: ImageApiGetSplashscreenRequest = {}, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).getSplashscreen(requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.quality, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10566,8 +8540,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getStudioImage(requestParameters: ImageApiGetStudioImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getStudioImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public getStudioImage(requestParameters: ImageApiGetStudioImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getStudioImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10578,8 +8552,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getStudioImageByIndex(requestParameters: ImageApiGetStudioImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getStudioImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getStudioImageByIndex(requestParameters: ImageApiGetStudioImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getStudioImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10590,20 +8564,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public getUserImage(requestParameters: ImageApiGetUserImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getUserImage(requestParameters.userId, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Get user profile image.
-     * @param {ImageApiGetUserImageByIndexRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ImageApi
-     */
-    public getUserImageByIndex(requestParameters: ImageApiGetUserImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).getUserImageByIndex(requestParameters.userId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public getUserImage(requestParameters: ImageApiGetUserImageRequest = {}, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).getUserImage(requestParameters.userId, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10614,8 +8576,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headArtistImage(requestParameters: ImageApiHeadArtistImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headArtistImage(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headArtistImage(requestParameters: ImageApiHeadArtistImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headArtistImage(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10626,8 +8588,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headGenreImage(requestParameters: ImageApiHeadGenreImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public headGenreImage(requestParameters: ImageApiHeadGenreImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10638,8 +8600,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headGenreImageByIndex(requestParameters: ImageApiHeadGenreImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headGenreImageByIndex(requestParameters: ImageApiHeadGenreImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10650,8 +8612,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headItemImage(requestParameters: ImageApiHeadItemImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.cropWhitespace, requestParameters.format, requestParameters.addPlayedIndicator, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public headItemImage(requestParameters: ImageApiHeadItemImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10662,8 +8624,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headItemImage2(requestParameters: ImageApiHeadItemImage2Request, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headItemImage2(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.imageIndex, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headItemImage2(requestParameters: ImageApiHeadItemImage2Request, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headItemImage2(requestParameters.itemId, requestParameters.imageType, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.imageIndex, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10674,8 +8636,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headItemImageByIndex(requestParameters: ImageApiHeadItemImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.cropWhitespace, requestParameters.format, requestParameters.addPlayedIndicator, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headItemImageByIndex(requestParameters: ImageApiHeadItemImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.tag, requestParameters.format, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10686,8 +8648,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headMusicGenreImage(requestParameters: ImageApiHeadMusicGenreImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headMusicGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public headMusicGenreImage(requestParameters: ImageApiHeadMusicGenreImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headMusicGenreImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10698,8 +8660,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headMusicGenreImageByIndex(requestParameters: ImageApiHeadMusicGenreImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headMusicGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headMusicGenreImageByIndex(requestParameters: ImageApiHeadMusicGenreImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headMusicGenreImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10710,8 +8672,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headPersonImage(requestParameters: ImageApiHeadPersonImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headPersonImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public headPersonImage(requestParameters: ImageApiHeadPersonImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headPersonImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10722,8 +8684,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headPersonImageByIndex(requestParameters: ImageApiHeadPersonImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headPersonImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headPersonImageByIndex(requestParameters: ImageApiHeadPersonImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headPersonImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10734,8 +8696,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headStudioImage(requestParameters: ImageApiHeadStudioImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headStudioImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
+    public headStudioImage(requestParameters: ImageApiHeadStudioImageRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headStudioImage(requestParameters.name, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10746,8 +8708,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headStudioImageByIndex(requestParameters: ImageApiHeadStudioImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headStudioImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headStudioImageByIndex(requestParameters: ImageApiHeadStudioImageByIndexRequest, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headStudioImageByIndex(requestParameters.name, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10758,20 +8720,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public headUserImage(requestParameters: ImageApiHeadUserImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headUserImage(requestParameters.userId, requestParameters.imageType, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Get user profile image.
-     * @param {ImageApiHeadUserImageByIndexRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ImageApi
-     */
-    public headUserImageByIndex(requestParameters: ImageApiHeadUserImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).headUserImageByIndex(requestParameters.userId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.cropWhitespace, requestParameters.addPlayedIndicator, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, options).then((request) => request(this.axios, this.basePath));
+    public headUserImage(requestParameters: ImageApiHeadUserImageRequest = {}, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).headUserImage(requestParameters.userId, requestParameters.tag, requestParameters.format, requestParameters.maxWidth, requestParameters.maxHeight, requestParameters.percentPlayed, requestParameters.unplayedCount, requestParameters.width, requestParameters.height, requestParameters.quality, requestParameters.fillWidth, requestParameters.fillHeight, requestParameters.blur, requestParameters.backgroundColor, requestParameters.foregroundLayer, requestParameters.imageIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10782,20 +8732,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public postUserImage(requestParameters: ImageApiPostUserImageRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).postUserImage(requestParameters.userId, requestParameters.imageType, requestParameters.index, requestParameters.body, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Sets the user image.
-     * @param {ImageApiPostUserImageByIndexRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ImageApi
-     */
-    public postUserImageByIndex(requestParameters: ImageApiPostUserImageByIndexRequest, options?: AxiosRequestConfig) {
-        return ImageApiFp(this.configuration).postUserImageByIndex(requestParameters.userId, requestParameters.imageType, requestParameters.index, requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    public postUserImage(requestParameters: ImageApiPostUserImageRequest = {}, options?: RawAxiosRequestConfig) {
+        return ImageApiFp(this.configuration).postUserImage(requestParameters.userId, requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10806,7 +8744,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public setItemImage(requestParameters: ImageApiSetItemImageRequest, options?: AxiosRequestConfig) {
+    public setItemImage(requestParameters: ImageApiSetItemImageRequest, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).setItemImage(requestParameters.itemId, requestParameters.imageType, requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10818,7 +8756,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public setItemImageByIndex(requestParameters: ImageApiSetItemImageByIndexRequest, options?: AxiosRequestConfig) {
+    public setItemImageByIndex(requestParameters: ImageApiSetItemImageByIndexRequest, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).setItemImageByIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10830,7 +8768,7 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public updateItemImageIndex(requestParameters: ImageApiUpdateItemImageIndexRequest, options?: AxiosRequestConfig) {
+    public updateItemImageIndex(requestParameters: ImageApiUpdateItemImageIndexRequest, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).updateItemImageIndex(requestParameters.itemId, requestParameters.imageType, requestParameters.imageIndex, requestParameters.newIndex, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -10842,7 +8780,8 @@ export class ImageApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ImageApi
      */
-    public uploadCustomSplashscreen(requestParameters: ImageApiUploadCustomSplashscreenRequest = {}, options?: AxiosRequestConfig) {
+    public uploadCustomSplashscreen(requestParameters: ImageApiUploadCustomSplashscreenRequest = {}, options?: RawAxiosRequestConfig) {
         return ImageApiFp(this.configuration).uploadCustomSplashscreen(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 }
+

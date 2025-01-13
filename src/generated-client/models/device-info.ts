@@ -12,7 +12,9 @@
  */
 
 
-import { ClientCapabilities } from './client-capabilities';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ClientCapabilities } from './client-capabilities';
 
 /**
  * 
@@ -26,6 +28,12 @@ export interface DeviceInfo {
      * @memberof DeviceInfo
      */
     'Name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceInfo
+     */
+    'CustomName'?: string | null;
     /**
      * Gets or sets the access token.
      * @type {string}

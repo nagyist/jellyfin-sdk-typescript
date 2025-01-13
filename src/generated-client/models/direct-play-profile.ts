@@ -12,28 +12,30 @@
  */
 
 
-import { DlnaProfileType } from './dlna-profile-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { DlnaProfileType } from './dlna-profile-type';
 
 /**
- * 
+ * Defines the MediaBrowser.Model.Dlna.DirectPlayProfile.
  * @export
  * @interface DirectPlayProfile
  */
 export interface DirectPlayProfile {
     /**
-     * 
+     * Gets or sets the container.
      * @type {string}
      * @memberof DirectPlayProfile
      */
-    'Container'?: string | null;
+    'Container'?: string;
     /**
-     * 
+     * Gets or sets the audio codec.
      * @type {string}
      * @memberof DirectPlayProfile
      */
     'AudioCodec'?: string | null;
     /**
-     * 
+     * Gets or sets the video codec.
      * @type {string}
      * @memberof DirectPlayProfile
      */
@@ -45,4 +47,6 @@ export interface DirectPlayProfile {
      */
     'Type'?: DlnaProfileType;
 }
+
+
 

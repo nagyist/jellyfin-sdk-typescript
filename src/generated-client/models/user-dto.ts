@@ -12,8 +12,12 @@
  */
 
 
-import { UserConfiguration } from './user-configuration';
-import { UserPolicy } from './user-policy';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { UserConfiguration } from './user-configuration';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { UserPolicy } from './user-policy';
 
 /**
  * Class UserDto.
@@ -67,6 +71,7 @@ export interface UserDto {
      * Gets or sets a value indicating whether this instance has configured easy password.
      * @type {boolean}
      * @memberof UserDto
+     * @deprecated
      */
     'HasConfiguredEasyPassword'?: boolean;
     /**

@@ -31,9 +31,33 @@ export function getDefaultPort(protocol: string): number {
 }
 
 /**
- * Parses a string to a Url object.
- * @param input A string representing a url.
- * @returns The Url object.
+ * Checks if the URL string specifies the protocol and port.
+ * @param urlString The URL string to test.
+ * @param url The parsed URL object.
+ * @returns True if the the URL string includes the protocol and port.
+ */
+export function hasProtocolAndPort(urlString: string, url: URL): boolean {
+	// The parsed URL object drops the default port
+	const port = url.port || getDefaultPort(url.protocol);
+	return urlString
+		.toLowerCase()
+		.startsWith(`${url.protocol}//${url.hostname.toLowerCase()}:${port}`);
+}
+
+/**
+ * Checks if the URL is using the protocol's default port.
+ * @param url The URL object to check.
+ * @returns True if the URL port is the protocol default.
+ */
+export function isDefaultPort(url: URL): boolean {
+	return !url.port
+		|| (url.port === getDefaultPort(url.protocol).toString());
+}
+
+/**
+ * Parses a string to a URL object.
+ * @param input A string representing a URL.
+ * @returns The URL object.
  */
 export function parseUrl(input: string): URL {
 	if (!input?.trim()) {

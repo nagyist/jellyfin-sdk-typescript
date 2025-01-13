@@ -5,8 +5,9 @@
  */
 
 import type { Api } from '../../api';
-import { DlnaApi } from '../../generated-client/api/dlna-api';
 
-export function getDlnaApi(api: Api): DlnaApi {
-	return new DlnaApi(api.configuration, undefined, api.axiosInstance);
+import { MediaSegmentsApi } from '../../generated-client/api/media-segments-api';
+
+export function getMediaSegmentsApi(api: Api): MediaSegmentsApi {
+	return new MediaSegmentsApi(api.configuration, undefined, api.axiosInstance);
 }

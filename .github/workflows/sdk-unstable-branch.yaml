@@ -17,21 +17,31 @@ jobs:
     if: ${{ github.repository == 'jellyfin/jellyfin-sdk-typescript' }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: master
+          ref: openapi-unstable
+          fetch-depth: 0
           token: ${{ secrets.JF_BOT_TOKEN }}
 
+      - name: Update unstable branch from master
+        run: |
+          git config user.name jellyfin-bot
+          git config user.email team@jellyfin.org
+          git rebase --strategy-option theirs origin/master
+
       - name: Set up Node.js
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: 16
+          node-version: 20
           check-latest: true
           cache: npm
 
+      - name: Install Node.js dependencies
+        run: npm ci --no-audit
+
       - name: Download unstable OpenAPI schema
         run: |
-          curl -sL https://repo.jellyfin.org/releases/openapi/jellyfin-openapi-unstable.json -o openapi.json
+          curl -sL https://api.jellyfin.org/openapi/jellyfin-openapi-unstable.json -o openapi.json
           npm run fix-schema
           cp openapi.json $HOME
 
@@ -40,9 +50,6 @@ jobs:
           VERSION=$(jq -r .info.version openapi.json)
           echo "UNSTABLE_API_VERSION=${VERSION}" >> $GITHUB_ENV
 
-      - name: Install Node.js dependencies
-        run: npm ci --no-audit
-
       - name: Update generated sources
         run: |
           cp $HOME/openapi.json .
@@ -50,10 +57,9 @@ jobs:
           sed -i "s/API_VERSION = '.*'/API_VERSION = '${{ env.UNSTABLE_API_VERSION }}'/" src/versions.ts
 
       - name: Commit changes
+        continue-on-error: true
         run: |
-          git config user.name jellyfin-bot
-          git config user.email team@jellyfin.org
-          git checkout -B openapi-unstable
-          git add .
-          git commit --allow-empty -m "Update OpenAPI to unstable"
-          git push --force origin openapi-unstable
+          [[ -n $(git status --porcelain) ]] && git add --all && git commit --amend -m "Update OpenAPI to unstable"
+
+      - name: Push changes
+        run: git push --force origin openapi-unstable
