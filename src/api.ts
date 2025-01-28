@@ -8,14 +8,8 @@ import globalInstance from 'axios';
 
 import { Configuration } from './generated-client/configuration';
 import type { AuthenticationResult } from './generated-client/models/authentication-result';
-import { ImageType } from './generated-client/models/image-type';
 import type { ClientInfo, DeviceInfo } from './models';
-import type { ImageRequestParameters } from './models/api/image-request-parameters';
 import { getAuthorizationHeader } from './utils';
-import { getImageApi } from './utils/api/image-api';
-// NOTE: This import is used for TSDoc
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { ImageUrlsApi } from './utils/api/image-urls-api';
 import { getSessionApi } from './utils/api/session-api';
 import { getUserApi } from './utils/api/user-api';
 
@@ -71,6 +65,20 @@ export class Api {
 	}
 
 	/**
+	 * Gets a full URI for a relative URL to the Jellyfin server for a given SDK Api instance.
+	 * @param url The relative URL.
+	 * @param params Any URL parameters.
+	 * @returns The complete URI with protocol, host, and base URL (if any).
+	 */
+	getUri(url: string, params?: object) {
+		return this.axiosInstance.getUri({
+			baseURL: this.basePath,
+			url,
+			params
+		});
+	}
+
+	/**
 	 * Convenience method for logging out and updating the internal state.
 	 */
 	logout(): Promise<AxiosResponse<never> | AxiosResponse<void>> {
@@ -78,27 +86,6 @@ export class Api {
 			this.accessToken = '';
 			return response;
 		});
-	}
-
-	/**
-	 * Get an item image URL.
-	 * @deprecated Use {@link ImageUrlsApi.getItemImageUrlById} instead.
-	 * @param itemId The Item ID.
-	 * @param imageType An optional Image Type (Primary by default).
-	 * @param params Additional request parameters.
-	 * @returns The image URL.
-	 */
-	getItemImageUrl(
-		itemId: string,
-		imageType: ImageType = ImageType.Primary,
-		params: ImageRequestParameters = {}
-	): string | undefined {
-		return getImageApi(this)
-			.getItemImageUrlById(
-				itemId,
-				imageType,
-				params
-			);
 	}
 
 	get authorizationHeader(): string {

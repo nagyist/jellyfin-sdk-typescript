@@ -12,9 +12,15 @@
  */
 
 
-import { EmbeddedSubtitleOptions } from './embedded-subtitle-options';
-import { MediaPathInfo } from './media-path-info';
-import { TypeOptions } from './type-options';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { EmbeddedSubtitleOptions } from './embedded-subtitle-options';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaPathInfo } from './media-path-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TypeOptions } from './type-options';
 
 /**
  * 
@@ -22,6 +28,12 @@ import { TypeOptions } from './type-options';
  * @interface LibraryOptions
  */
 export interface LibraryOptions {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'Enabled'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -39,6 +51,12 @@ export interface LibraryOptions {
      * @type {boolean}
      * @memberof LibraryOptions
      */
+    'EnableLUFSScan'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
     'EnableChapterImageExtraction'?: boolean;
     /**
      * 
@@ -46,6 +64,18 @@ export interface LibraryOptions {
      * @memberof LibraryOptions
      */
     'ExtractChapterImagesDuringLibraryScan'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'EnableTrickplayImageExtraction'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'ExtractTrickplayImagesDuringLibraryScan'?: boolean;
     /**
      * 
      * @type {Array<MediaPathInfo>}
@@ -77,6 +107,12 @@ export interface LibraryOptions {
      * @memberof LibraryOptions
      */
     'EnableEmbeddedTitles'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'EnableEmbeddedExtrasTitles'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -139,6 +175,18 @@ export interface LibraryOptions {
     'SubtitleFetcherOrder'?: Array<string>;
     /**
      * 
+     * @type {Array<string>}
+     * @memberof LibraryOptions
+     */
+    'DisabledMediaSegmentProviders'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryOptions
+     */
+    'MediaSegmentProvideOrder'?: Array<string>;
+    /**
+     * 
      * @type {boolean}
      * @memberof LibraryOptions
      */
@@ -172,6 +220,54 @@ export interface LibraryOptions {
      * @type {boolean}
      * @memberof LibraryOptions
      */
+    'SaveLyricsWithMedia'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'SaveTrickplayWithMedia'?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryOptions
+     */
+    'DisabledLyricFetchers'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryOptions
+     */
+    'LyricFetcherOrder'?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'PreferNonstandardArtistsTag'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
+    'UseCustomTagDelimiters'?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryOptions
+     */
+    'CustomTagDelimiters'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryOptions
+     */
+    'DelimiterWhitelist'?: Array<string>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LibraryOptions
+     */
     'AutomaticallyAddToCollection'?: boolean;
     /**
      * 
@@ -186,4 +282,6 @@ export interface LibraryOptions {
      */
     'TypeOptions'?: Array<TypeOptions>;
 }
+
+
 

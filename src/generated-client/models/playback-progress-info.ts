@@ -12,10 +12,21 @@
  */
 
 
-import { BaseItemDto } from './base-item-dto';
-import { PlayMethod } from './play-method';
-import { QueueItem } from './queue-item';
-import { RepeatMode } from './repeat-mode';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { BaseItemDto } from './base-item-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { PlayMethod } from './play-method';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { PlaybackOrder } from './playback-order';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { QueueItem } from './queue-item';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { RepeatMode } from './repeat-mode';
 
 /**
  * Class PlaybackProgressInfo.
@@ -133,6 +144,12 @@ export interface PlaybackProgressInfo {
     'RepeatMode'?: RepeatMode;
     /**
      * 
+     * @type {PlaybackOrder}
+     * @memberof PlaybackProgressInfo
+     */
+    'PlaybackOrder'?: PlaybackOrder;
+    /**
+     * 
      * @type {Array<QueueItem>}
      * @memberof PlaybackProgressInfo
      */
@@ -144,4 +161,6 @@ export interface PlaybackProgressInfo {
      */
     'PlaylistItemId'?: string | null;
 }
+
+
 

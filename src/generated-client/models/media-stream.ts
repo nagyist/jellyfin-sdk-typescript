@@ -12,8 +12,21 @@
  */
 
 
-import { MediaStreamType } from './media-stream-type';
-import { SubtitleDeliveryMethod } from './subtitle-delivery-method';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AudioSpatialFormat } from './audio-spatial-format';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaStreamType } from './media-stream-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { SubtitleDeliveryMethod } from './subtitle-delivery-method';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { VideoRange } from './video-range';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { VideoRangeType } from './video-range-type';
 
 /**
  * Class MediaStream.
@@ -112,6 +125,12 @@ export interface MediaStream {
      */
     'DvBlSignalCompatibilityId'?: number | null;
     /**
+     * Gets or sets the Rotation in degrees.
+     * @type {number}
+     * @memberof MediaStream
+     */
+    'Rotation'?: number | null;
+    /**
      * Gets or sets the comment.
      * @type {string}
      * @memberof MediaStream
@@ -136,23 +155,29 @@ export interface MediaStream {
      */
     'Title'?: string | null;
     /**
-     * Gets the video range.
-     * @type {string}
+     * 
+     * @type {VideoRange}
      * @memberof MediaStream
      */
-    'VideoRange'?: string | null;
+    'VideoRange'?: VideoRange;
     /**
-     * Gets the video range type.
-     * @type {string}
+     * 
+     * @type {VideoRangeType}
      * @memberof MediaStream
      */
-    'VideoRangeType'?: string | null;
+    'VideoRangeType'?: VideoRangeType;
     /**
      * Gets the video dovi title.
      * @type {string}
      * @memberof MediaStream
      */
     'VideoDoViTitle'?: string | null;
+    /**
+     * 
+     * @type {AudioSpatialFormat}
+     * @memberof MediaStream
+     */
+    'AudioSpatialFormat'?: AudioSpatialFormat;
     /**
      * 
      * @type {string}
@@ -177,6 +202,12 @@ export interface MediaStream {
      * @memberof MediaStream
      */
     'LocalizedExternal'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MediaStream
+     */
+    'LocalizedHearingImpaired'?: string | null;
     /**
      * 
      * @type {string}
@@ -256,6 +287,12 @@ export interface MediaStream {
      */
     'IsForced'?: boolean;
     /**
+     * Gets or sets a value indicating whether this instance is for the hearing impaired.
+     * @type {boolean}
+     * @memberof MediaStream
+     */
+    'IsHearingImpaired'?: boolean;
+    /**
      * Gets or sets the height.
      * @type {number}
      * @memberof MediaStream
@@ -279,6 +316,12 @@ export interface MediaStream {
      * @memberof MediaStream
      */
     'RealFrameRate'?: number | null;
+    /**
+     * Gets the framerate used as reference.  Prefer AverageFrameRate, if that is null or an unrealistic value  then fallback to RealFrameRate.
+     * @type {number}
+     * @memberof MediaStream
+     */
+    'ReferenceFrameRate'?: number | null;
     /**
      * Gets or sets the profile.
      * @type {string}
@@ -370,4 +413,6 @@ export interface MediaStream {
      */
     'IsAnamorphic'?: boolean | null;
 }
+
+
 

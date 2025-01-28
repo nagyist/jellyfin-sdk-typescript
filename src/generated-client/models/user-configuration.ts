@@ -12,7 +12,9 @@
  */
 
 
-import { SubtitlePlaybackMode } from './subtitle-playback-mode';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { SubtitlePlaybackMode } from './subtitle-playback-mode';
 
 /**
  * Class UserConfiguration.
@@ -110,5 +112,13 @@ export interface UserConfiguration {
      * @memberof UserConfiguration
      */
     'EnableNextEpisodeAutoPlay'?: boolean;
+    /**
+     * Gets or sets the id of the selected cast receiver.
+     * @type {string}
+     * @memberof UserConfiguration
+     */
+    'CastReceiverId'?: string | null;
 }
+
+
 

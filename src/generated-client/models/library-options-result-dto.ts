@@ -12,8 +12,12 @@
  */
 
 
-import { LibraryOptionInfoDto } from './library-option-info-dto';
-import { LibraryTypeOptionsDto } from './library-type-options-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { LibraryOptionInfoDto } from './library-option-info-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { LibraryTypeOptionsDto } from './library-type-options-dto';
 
 /**
  * Library options result dto.
@@ -39,6 +43,12 @@ export interface LibraryOptionsResultDto {
      * @memberof LibraryOptionsResultDto
      */
     'SubtitleFetchers'?: Array<LibraryOptionInfoDto>;
+    /**
+     * Gets or sets the list of lyric fetchers.
+     * @type {Array<LibraryOptionInfoDto>}
+     * @memberof LibraryOptionsResultDto
+     */
+    'LyricFetchers'?: Array<LibraryOptionInfoDto>;
     /**
      * Gets or sets the type options.
      * @type {Array<LibraryTypeOptionsDto>}

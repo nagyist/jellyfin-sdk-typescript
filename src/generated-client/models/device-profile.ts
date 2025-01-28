@@ -12,14 +12,21 @@
  */
 
 
-import { CodecProfile } from './codec-profile';
-import { ContainerProfile } from './container-profile';
-import { DeviceIdentification } from './device-identification';
-import { DirectPlayProfile } from './direct-play-profile';
-import { ResponseProfile } from './response-profile';
-import { SubtitleProfile } from './subtitle-profile';
-import { TranscodingProfile } from './transcoding-profile';
-import { XmlAttribute } from './xml-attribute';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { CodecProfile } from './codec-profile';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ContainerProfile } from './container-profile';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { DirectPlayProfile } from './direct-play-profile';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { SubtitleProfile } from './subtitle-profile';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TranscodingProfile } from './transcoding-profile';
 
 /**
  * A MediaBrowser.Model.Dlna.DeviceProfile represents a set of metadata which determines which content a certain device is able to play.  <br />  Specifically, it defines the supported <see cref=\"P:MediaBrowser.Model.Dlna.DeviceProfile.ContainerProfiles\">containers</see> and  <see cref=\"P:MediaBrowser.Model.Dlna.DeviceProfile.CodecProfiles\">codecs</see> (video and/or audio, including codec profiles and levels)  the device is able to direct play (without transcoding or remuxing),  as well as which <see cref=\"P:MediaBrowser.Model.Dlna.DeviceProfile.TranscodingProfiles\">containers/codecs to transcode to</see> in case it isn\'t.
@@ -28,131 +35,17 @@ import { XmlAttribute } from './xml-attribute';
  */
 export interface DeviceProfile {
     /**
-     * Gets or sets the name of this device profile.
+     * Gets or sets the name of this device profile. User profiles must have a unique name.
      * @type {string}
      * @memberof DeviceProfile
      */
     'Name'?: string | null;
     /**
-     * Gets or sets the Id.
+     * Gets or sets the unique internal identifier.
      * @type {string}
      * @memberof DeviceProfile
      */
     'Id'?: string | null;
-    /**
-     * 
-     * @type {DeviceIdentification}
-     * @memberof DeviceProfile
-     */
-    'Identification'?: DeviceIdentification;
-    /**
-     * Gets or sets the friendly name of the device profile, which can be shown to users.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'FriendlyName'?: string | null;
-    /**
-     * Gets or sets the manufacturer of the device which this profile represents.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'Manufacturer'?: string | null;
-    /**
-     * Gets or sets an url for the manufacturer of the device which this profile represents.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'ManufacturerUrl'?: string | null;
-    /**
-     * Gets or sets the model name of the device which this profile represents.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'ModelName'?: string | null;
-    /**
-     * Gets or sets the model description of the device which this profile represents.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'ModelDescription'?: string | null;
-    /**
-     * Gets or sets the model number of the device which this profile represents.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'ModelNumber'?: string | null;
-    /**
-     * Gets or sets the ModelUrl.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'ModelUrl'?: string | null;
-    /**
-     * Gets or sets the serial number of the device which this profile represents.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'SerialNumber'?: string | null;
-    /**
-     * Gets or sets a value indicating whether EnableAlbumArtInDidl.
-     * @type {boolean}
-     * @memberof DeviceProfile
-     */
-    'EnableAlbumArtInDidl'?: boolean;
-    /**
-     * Gets or sets a value indicating whether EnableSingleAlbumArtLimit.
-     * @type {boolean}
-     * @memberof DeviceProfile
-     */
-    'EnableSingleAlbumArtLimit'?: boolean;
-    /**
-     * Gets or sets a value indicating whether EnableSingleSubtitleLimit.
-     * @type {boolean}
-     * @memberof DeviceProfile
-     */
-    'EnableSingleSubtitleLimit'?: boolean;
-    /**
-     * Gets or sets the SupportedMediaTypes.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'SupportedMediaTypes'?: string;
-    /**
-     * Gets or sets the UserId.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'UserId'?: string | null;
-    /**
-     * Gets or sets the AlbumArtPn.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'AlbumArtPn'?: string | null;
-    /**
-     * Gets or sets the MaxAlbumArtWidth.
-     * @type {number}
-     * @memberof DeviceProfile
-     */
-    'MaxAlbumArtWidth'?: number | null;
-    /**
-     * Gets or sets the MaxAlbumArtHeight.
-     * @type {number}
-     * @memberof DeviceProfile
-     */
-    'MaxAlbumArtHeight'?: number | null;
-    /**
-     * Gets or sets the maximum allowed width of embedded icons.
-     * @type {number}
-     * @memberof DeviceProfile
-     */
-    'MaxIconWidth'?: number | null;
-    /**
-     * Gets or sets the maximum allowed height of embedded icons.
-     * @type {number}
-     * @memberof DeviceProfile
-     */
-    'MaxIconHeight'?: number | null;
     /**
      * Gets or sets the maximum allowed bitrate for all streamed content.
      * @type {number}
@@ -178,54 +71,6 @@ export interface DeviceProfile {
      */
     'MaxStaticMusicBitrate'?: number | null;
     /**
-     * Gets or sets the content of the aggregationFlags element in the urn:schemas-sonycom:av namespace.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'SonyAggregationFlags'?: string | null;
-    /**
-     * Gets or sets the ProtocolInfo.
-     * @type {string}
-     * @memberof DeviceProfile
-     */
-    'ProtocolInfo'?: string | null;
-    /**
-     * Gets or sets the TimelineOffsetSeconds.
-     * @type {number}
-     * @memberof DeviceProfile
-     */
-    'TimelineOffsetSeconds'?: number;
-    /**
-     * Gets or sets a value indicating whether RequiresPlainVideoItems.
-     * @type {boolean}
-     * @memberof DeviceProfile
-     */
-    'RequiresPlainVideoItems'?: boolean;
-    /**
-     * Gets or sets a value indicating whether RequiresPlainFolders.
-     * @type {boolean}
-     * @memberof DeviceProfile
-     */
-    'RequiresPlainFolders'?: boolean;
-    /**
-     * Gets or sets a value indicating whether EnableMSMediaReceiverRegistrar.
-     * @type {boolean}
-     * @memberof DeviceProfile
-     */
-    'EnableMSMediaReceiverRegistrar'?: boolean;
-    /**
-     * Gets or sets a value indicating whether IgnoreTranscodeByteRangeRequests.
-     * @type {boolean}
-     * @memberof DeviceProfile
-     */
-    'IgnoreTranscodeByteRangeRequests'?: boolean;
-    /**
-     * Gets or sets the XmlRootAttributes.
-     * @type {Array<XmlAttribute>}
-     * @memberof DeviceProfile
-     */
-    'XmlRootAttributes'?: Array<XmlAttribute>;
-    /**
      * Gets or sets the direct play profiles.
      * @type {Array<DirectPlayProfile>}
      * @memberof DeviceProfile
@@ -238,7 +83,7 @@ export interface DeviceProfile {
      */
     'TranscodingProfiles'?: Array<TranscodingProfile>;
     /**
-     * Gets or sets the container profiles.
+     * Gets or sets the container profiles. Failing to meet these optional conditions causes transcoding to occur.
      * @type {Array<ContainerProfile>}
      * @memberof DeviceProfile
      */
@@ -249,12 +94,6 @@ export interface DeviceProfile {
      * @memberof DeviceProfile
      */
     'CodecProfiles'?: Array<CodecProfile>;
-    /**
-     * Gets or sets the ResponseProfiles.
-     * @type {Array<ResponseProfile>}
-     * @memberof DeviceProfile
-     */
-    'ResponseProfiles'?: Array<ResponseProfile>;
     /**
      * Gets or sets the subtitle profiles.
      * @type {Array<SubtitleProfile>}

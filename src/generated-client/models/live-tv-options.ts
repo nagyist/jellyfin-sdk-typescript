@@ -12,8 +12,12 @@
  */
 
 
-import { ListingsProviderInfo } from './listings-provider-info';
-import { TunerHostInfo } from './tuner-host-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ListingsProviderInfo } from './listings-provider-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TunerHostInfo } from './tuner-host-info';
 
 /**
  * 
@@ -99,5 +103,17 @@ export interface LiveTvOptions {
      * @memberof LiveTvOptions
      */
     'RecordingPostProcessorArguments'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LiveTvOptions
+     */
+    'SaveRecordingNFO'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LiveTvOptions
+     */
+    'SaveRecordingImages'?: boolean;
 }
 
