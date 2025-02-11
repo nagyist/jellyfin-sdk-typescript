@@ -12,6 +12,12 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { BaseItemKind } from './base-item-kind';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaType } from './media-type';
 
 /**
  * Class SearchHintResult.
@@ -23,10 +29,11 @@ export interface SearchHint {
      * Gets or sets the item id.
      * @type {string}
      * @memberof SearchHint
+     * @deprecated
      */
     'ItemId'?: string;
     /**
-     * 
+     * Gets or sets the item id.
      * @type {string}
      * @memberof SearchHint
      */
@@ -36,7 +43,7 @@ export interface SearchHint {
      * @type {string}
      * @memberof SearchHint
      */
-    'Name'?: string | null;
+    'Name'?: string;
     /**
      * Gets or sets the matched term.
      * @type {string}
@@ -92,13 +99,13 @@ export interface SearchHint {
      */
     'BackdropImageItemId'?: string | null;
     /**
-     * Gets or sets the type.
-     * @type {string}
+     * 
+     * @type {BaseItemKind}
      * @memberof SearchHint
      */
-    'Type'?: string | null;
+    'Type'?: BaseItemKind;
     /**
-     * 
+     * Gets or sets a value indicating whether this instance is folder.
      * @type {boolean}
      * @memberof SearchHint
      */
@@ -110,19 +117,19 @@ export interface SearchHint {
      */
     'RunTimeTicks'?: number | null;
     /**
-     * Gets or sets the type of the media.
-     * @type {string}
+     * 
+     * @type {MediaType}
      * @memberof SearchHint
      */
-    'MediaType'?: string | null;
+    'MediaType'?: MediaType;
     /**
-     * 
+     * Gets or sets the start date.
      * @type {string}
      * @memberof SearchHint
      */
     'StartDate'?: string | null;
     /**
-     * 
+     * Gets or sets the end date.
      * @type {string}
      * @memberof SearchHint
      */
@@ -134,7 +141,7 @@ export interface SearchHint {
      */
     'Series'?: string | null;
     /**
-     * 
+     * Gets or sets the status.
      * @type {string}
      * @memberof SearchHint
      */
@@ -146,11 +153,11 @@ export interface SearchHint {
      */
     'Album'?: string | null;
     /**
-     * 
+     * Gets or sets the album id.
      * @type {string}
      * @memberof SearchHint
      */
-    'AlbumId'?: string;
+    'AlbumId'?: string | null;
     /**
      * Gets or sets the album artist.
      * @type {string}
@@ -162,7 +169,7 @@ export interface SearchHint {
      * @type {Array<string>}
      * @memberof SearchHint
      */
-    'Artists'?: Array<string> | null;
+    'Artists'?: Array<string>;
     /**
      * Gets or sets the song count.
      * @type {number}
@@ -180,7 +187,7 @@ export interface SearchHint {
      * @type {string}
      * @memberof SearchHint
      */
-    'ChannelId'?: string;
+    'ChannelId'?: string | null;
     /**
      * Gets or sets the name of the channel.
      * @type {string}
@@ -194,4 +201,6 @@ export interface SearchHint {
      */
     'PrimaryImageAspectRatio'?: number | null;
 }
+
+
 

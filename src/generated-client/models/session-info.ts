@@ -12,14 +12,30 @@
  */
 
 
-import { BaseItem } from './base-item';
-import { BaseItemDto } from './base-item-dto';
-import { ClientCapabilities } from './client-capabilities';
-import { GeneralCommandType } from './general-command-type';
-import { PlayerStateInfo } from './player-state-info';
-import { QueueItem } from './queue-item';
-import { SessionUserInfo } from './session-user-info';
-import { TranscodingInfo } from './transcoding-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { BaseItemDto } from './base-item-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ClientCapabilities } from './client-capabilities';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { GeneralCommandType } from './general-command-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaType } from './media-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { PlayerStateInfo } from './player-state-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { QueueItem } from './queue-item';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { SessionUserInfo } from './session-user-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TranscodingInfo } from './transcoding-info';
 
 /**
  * Class SessionInfo.
@@ -53,10 +69,10 @@ export interface SessionInfo {
     'RemoteEndPoint'?: string | null;
     /**
      * Gets the playable media types.
-     * @type {Array<string>}
+     * @type {Array<MediaType>}
      * @memberof SessionInfo
      */
-    'PlayableMediaTypes'?: Array<string> | null;
+    'PlayableMediaTypes'?: Array<MediaType> | null;
     /**
      * Gets or sets the id.
      * @type {string}
@@ -94,6 +110,12 @@ export interface SessionInfo {
      */
     'LastPlaybackCheckIn'?: string;
     /**
+     * Gets or sets the last paused date.
+     * @type {string}
+     * @memberof SessionInfo
+     */
+    'LastPausedDate'?: string | null;
+    /**
      * Gets or sets the name of the device.
      * @type {string}
      * @memberof SessionInfo
@@ -111,12 +133,6 @@ export interface SessionInfo {
      * @memberof SessionInfo
      */
     'NowPlayingItem'?: BaseItemDto;
-    /**
-     * 
-     * @type {BaseItem}
-     * @memberof SessionInfo
-     */
-    'FullNowPlayingItem'?: BaseItem;
     /**
      * 
      * @type {BaseItemDto}

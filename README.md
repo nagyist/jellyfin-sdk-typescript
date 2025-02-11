@@ -35,7 +35,10 @@ yarn add @jellyfin/sdk
 
 | SDK Version | Jellyfin Version |
 |:-:|:-:|
-| 0.8.2 - 0.6.0 | 10.8.1 - 10.8.9 |
+| 0.11.0 | 10.10.x |
+| 0.10.0 | 10.9.x |
+| 0.9.0 | 10.9.x |
+| 0.8.2 - 0.6.0 | 10.8.1 - 10.8.13 |
 | 0.5.0 | 10.8.0 |
 | <0.5.0 | 10.7.x |
 
@@ -106,6 +109,18 @@ await api.logout();
 
 ## Breaking Changes
 
+### v0.11.0
+
+* Updated OpenAPI spec for Jellyfin 10.10.0. [#816](https://github.com/jellyfin/jellyfin-sdk-typescript/pull/816)
+
+### v0.10.0
+
+* Updated build target to ES2018. [#712](https://github.com/jellyfin/jellyfin-sdk-typescript/pull/712)
+
+### v0.9.0
+
+* Updated OpenAPI spec for Jellyfin 10.9.1. [#694](https://github.com/jellyfin/jellyfin-sdk-typescript/pull/694)
+
 ### v0.8.0
 
 * The library is now fully targeted to ES6/ES2015.
@@ -145,7 +160,7 @@ await api.logout();
 * [x] Use custom generator templates for API versions [#231](https://github.com/jellyfin/jellyfin-sdk-typescript/pull/231) (Currently uses sed to update the value could be improved.)
 * [x] Automate OpenAPI spec updates using GitHub [#351](https://github.com/jellyfin/jellyfin-sdk-typescript/pull/351)
 * [x] Create branch tracking unstable Jellyfin builds with automated builds [#354](https://github.com/jellyfin/jellyfin-sdk-typescript/pull/354)
-* [ ] Fix authentication header escaping
+* [x] Fix authentication header escaping [#564](https://github.com/jellyfin/jellyfin-sdk-typescript/pull/564)
 * [ ] Add WebSocket API support
 * [ ] Add example projects for different ecosystems [#186](https://github.com/jellyfin/jellyfin-sdk-typescript/issues/186)
 * [ ] Add utility function for `getFile` [#164](https://github.com/jellyfin/jellyfin-sdk-typescript/issues/164)

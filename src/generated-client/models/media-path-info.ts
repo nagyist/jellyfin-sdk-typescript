@@ -25,11 +25,5 @@ export interface MediaPathInfo {
      * @memberof MediaPathInfo
      */
     'Path'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MediaPathInfo
-     */
-    'NetworkPath'?: string | null;
 }
 

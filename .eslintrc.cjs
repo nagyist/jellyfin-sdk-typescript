@@ -2,8 +2,10 @@ module.exports = {
 	root: true,
 	parser: '@typescript-eslint/parser',
 	plugins: [
+		'@stylistic',
 		'@typescript-eslint',
-		'import'
+		'import',
+		'vitest'
 	],
 	env: {
 		node: true
@@ -21,8 +23,9 @@ module.exports = {
 			'newlines-between': 'always-and-inside-groups'
 		}],
 
+		'@stylistic/type-annotation-spacing': ['error'],
+
 		'@typescript-eslint/consistent-type-imports': ['error'],
-		'@typescript-eslint/type-annotation-spacing': ['error'],
 
 		'array-callback-return': ['error'],
 		'arrow-spacing': ['error'],
@@ -66,20 +69,18 @@ module.exports = {
 		},
 		{
 			files: [ './**/*.test.ts' ],
-			plugins: [ 'jest' ],
+			plugins: [ 'vitest' ],
 			env: {
-				node: false,
-				browser: false,
-				'jest/globals': true
+				node: true,
+				browser: false
 			},
 			extends: [
-				'plugin:jest/recommended',
-				'plugin:jest/style'
+				'plugin:vitest/recommended'
 			],
 			rules: {
-				'jest/consistent-test-it': [ 'error' ],
-				'jest/prefer-lowercase-title': [ 'error', { 'ignoreTopLevelDescribe': true } ],
-				'jest/require-top-level-describe': [ 'error' ]
+				'vitest/consistent-test-it': [ 'error' ],
+				'vitest/prefer-lowercase-title': [ 'error', { 'ignoreTopLevelDescribe': true } ],
+				'vitest/require-top-level-describe': [ 'error' ]
 			}
 		}
 	]

@@ -12,10 +12,12 @@
  */
 
 
-import { SeriesTimerInfoDto } from './series-timer-info-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { SeriesTimerInfoDto } from './series-timer-info-dto';
 
 /**
- * 
+ * Query result container.
  * @export
  * @interface SeriesTimerInfoDtoQueryResult
  */
@@ -25,7 +27,7 @@ export interface SeriesTimerInfoDtoQueryResult {
      * @type {Array<SeriesTimerInfoDto>}
      * @memberof SeriesTimerInfoDtoQueryResult
      */
-    'Items'?: Array<SeriesTimerInfoDto> | null;
+    'Items'?: Array<SeriesTimerInfoDto>;
     /**
      * Gets or sets the total number of records available.
      * @type {number}

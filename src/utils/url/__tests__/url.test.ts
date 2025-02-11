@@ -4,7 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { getDefaultPort, HTTP_PORT, HTTPS_PORT, HTTPS_PROTOCOL, HTTP_PROTOCOL, copyUrl, parseUrl } from '..';
+import { describe, it, expect } from 'vitest';
+
+import { getDefaultPort, HTTP_PORT, HTTPS_PORT, HTTPS_PROTOCOL, HTTP_PROTOCOL, copyUrl, parseUrl, hasProtocolAndPort, isDefaultPort } from '..';
 
 /**
  * Url tests.
@@ -35,6 +37,45 @@ describe('Url', () => {
 			expect(() => {
 				getDefaultPort('FOO');
 			}).toThrow();
+		});
+	});
+
+	describe('hasProtocolAndPort()', () => {
+		it('should return true if the protocol and port are specified', () => {
+			const urlString = 'https://example.com:443';
+			const url = parseUrl(urlString);
+			expect(hasProtocolAndPort(urlString, url)).toBe(true);
+		});
+
+		it('should return false if the port is not specified', () => {
+			const urlString = 'https://example.com';
+			const url = parseUrl(urlString);
+			expect(hasProtocolAndPort(urlString, url)).toBe(false);
+		});
+
+		it('should return false if the protocol is not specified', () => {
+			const urlString = 'example.com:443';
+			const url = parseUrl(urlString);
+			expect(hasProtocolAndPort(urlString, url)).toBe(false);
+		});
+	});
+
+	describe('isDefaultPort()', () => {
+		it('should return true for default port', () => {
+			let url = new URL('https://example.com');
+			expect(isDefaultPort(url)).toBe(true);
+
+			url.port = HTTPS_PORT.toString();
+			expect(isDefaultPort(url)).toBe(true);
+
+			url = new URL('http://example.com');
+			url.port = HTTP_PORT.toString();
+			expect(isDefaultPort(url)).toBe(true);
+		});
+
+		it('should return false for alternate ports', () => {
+			const url = new URL('http://example.com:8888');
+			expect(isDefaultPort(url)).toBe(false);
 		});
 	});
 
