@@ -12,9 +12,15 @@
  */
 
 
-import { AccessSchedule } from './access-schedule';
-import { SyncPlayUserAccessType } from './sync-play-user-access-type';
-import { UnratedItem } from './unrated-item';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { AccessSchedule } from './access-schedule';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { SyncPlayUserAccessType } from './sync-play-user-access-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { UnratedItem } from './unrated-item';
 
 /**
  * 
@@ -35,6 +41,24 @@ export interface UserPolicy {
      */
     'IsHidden'?: boolean;
     /**
+     * Gets or sets a value indicating whether this instance can manage collections.
+     * @type {boolean}
+     * @memberof UserPolicy
+     */
+    'EnableCollectionManagement'?: boolean;
+    /**
+     * Gets or sets a value indicating whether this instance can manage subtitles.
+     * @type {boolean}
+     * @memberof UserPolicy
+     */
+    'EnableSubtitleManagement'?: boolean;
+    /**
+     * Gets or sets a value indicating whether this user can manage lyrics.
+     * @type {boolean}
+     * @memberof UserPolicy
+     */
+    'EnableLyricManagement'?: boolean;
+    /**
      * Gets or sets a value indicating whether this instance is disabled.
      * @type {boolean}
      * @memberof UserPolicy
@@ -52,6 +76,12 @@ export interface UserPolicy {
      * @memberof UserPolicy
      */
     'BlockedTags'?: Array<string> | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof UserPolicy
+     */
+    'AllowedTags'?: Array<string> | null;
     /**
      * 
      * @type {boolean}
@@ -243,13 +273,13 @@ export interface UserPolicy {
      * @type {string}
      * @memberof UserPolicy
      */
-    'AuthenticationProviderId'?: string | null;
+    'AuthenticationProviderId': string;
     /**
      * 
      * @type {string}
      * @memberof UserPolicy
      */
-    'PasswordResetProviderId'?: string | null;
+    'PasswordResetProviderId': string;
     /**
      * 
      * @type {SyncPlayUserAccessType}
@@ -257,4 +287,6 @@ export interface UserPolicy {
      */
     'SyncPlayAccess'?: SyncPlayUserAccessType;
 }
+
+
 

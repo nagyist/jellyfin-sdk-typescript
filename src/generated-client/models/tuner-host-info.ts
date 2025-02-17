@@ -66,6 +66,24 @@ export interface TunerHostInfo {
      * @type {boolean}
      * @memberof TunerHostInfo
      */
+    'AllowFmp4TranscodingContainer'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TunerHostInfo
+     */
+    'AllowStreamSharing'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof TunerHostInfo
+     */
+    'FallbackMaxStreamingBitrate'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TunerHostInfo
+     */
     'EnableStreamLooping'?: boolean;
     /**
      * 
@@ -85,5 +103,11 @@ export interface TunerHostInfo {
      * @memberof TunerHostInfo
      */
     'UserAgent'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TunerHostInfo
+     */
+    'IgnoreDts'?: boolean;
 }
 

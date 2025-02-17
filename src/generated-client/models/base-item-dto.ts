@@ -12,26 +12,78 @@
  */
 
 
-import { BaseItemDtoImageBlurHashes } from './base-item-dto-image-blur-hashes';
-import { BaseItemKind } from './base-item-kind';
-import { BaseItemPerson } from './base-item-person';
-import { ChannelType } from './channel-type';
-import { ChapterInfo } from './chapter-info';
-import { DayOfWeek } from './day-of-week';
-import { ExternalUrl } from './external-url';
-import { ImageOrientation } from './image-orientation';
-import { IsoType } from './iso-type';
-import { LocationType } from './location-type';
-import { MediaSourceInfo } from './media-source-info';
-import { MediaStream } from './media-stream';
-import { MediaUrl } from './media-url';
-import { MetadataField } from './metadata-field';
-import { NameGuidPair } from './name-guid-pair';
-import { PlayAccess } from './play-access';
-import { ProgramAudio } from './program-audio';
-import { UserItemDataDto } from './user-item-data-dto';
-import { Video3DFormat } from './video3-dformat';
-import { VideoType } from './video-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { BaseItemDtoImageBlurHashes } from './base-item-dto-image-blur-hashes';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { BaseItemKind } from './base-item-kind';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { BaseItemPerson } from './base-item-person';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ChannelType } from './channel-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ChapterInfo } from './chapter-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { CollectionType } from './collection-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { DayOfWeek } from './day-of-week';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ExternalUrl } from './external-url';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ExtraType } from './extra-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ImageOrientation } from './image-orientation';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { IsoType } from './iso-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { LocationType } from './location-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaSourceInfo } from './media-source-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaStream } from './media-stream';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaType } from './media-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MediaUrl } from './media-url';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MetadataField } from './metadata-field';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { NameGuidPair } from './name-guid-pair';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { PlayAccess } from './play-access';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ProgramAudio } from './program-audio';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TrickplayInfo } from './trickplay-info';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { UserItemDataDto } from './user-item-data-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { Video3DFormat } from './video3-dformat';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { VideoType } from './video-type';
 
 /**
  * This is strictly used as a data transfer object from the api layer.  This holds information about a BaseItem in a format that is convenient for the client.
@@ -95,10 +147,10 @@ export interface BaseItemDto {
     'DateLastMediaAdded'?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {ExtraType}
      * @memberof BaseItemDto
      */
-    'ExtraType'?: string | null;
+    'ExtraType'?: ExtraType;
     /**
      * 
      * @type {number}
@@ -134,6 +186,12 @@ export interface BaseItemDto {
      * @type {boolean}
      * @memberof BaseItemDto
      */
+    'HasLyrics'?: boolean | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BaseItemDto
+     */
     'HasSubtitles'?: boolean | null;
     /**
      * 
@@ -147,12 +205,6 @@ export interface BaseItemDto {
      * @memberof BaseItemDto
      */
     'PreferredMetadataCountryCode'?: string | null;
-    /**
-     * Gets or sets a value indicating whether [supports synchronize].
-     * @type {boolean}
-     * @memberof BaseItemDto
-     */
-    'SupportsSync'?: boolean | null;
     /**
      * 
      * @type {string}
@@ -341,10 +393,10 @@ export interface BaseItemDto {
     'RemoteTrailers'?: Array<MediaUrl> | null;
     /**
      * Gets or sets the provider ids.
-     * @type {{ [key: string]: string; }}
+     * @type {{ [key: string]: string | null; }}
      * @memberof BaseItemDto
      */
-    'ProviderIds'?: { [key: string]: string; } | null;
+    'ProviderIds'?: { [key: string]: string | null; } | null;
     /**
      * Gets or sets a value indicating whether this instance is HD.
      * @type {boolean}
@@ -388,13 +440,13 @@ export interface BaseItemDto {
      */
     'GenreItems'?: Array<NameGuidPair> | null;
     /**
-     * Gets or sets wether the item has a logo, this will hold the Id of the Parent that has one.
+     * Gets or sets whether the item has a logo, this will hold the Id of the Parent that has one.
      * @type {string}
      * @memberof BaseItemDto
      */
     'ParentLogoItemId'?: string | null;
     /**
-     * Gets or sets wether the item has any backdrops, this will hold the Id of the Parent that has one.
+     * Gets or sets whether the item has any backdrops, this will hold the Id of the Parent that has one.
      * @type {string}
      * @memberof BaseItemDto
      */
@@ -508,11 +560,11 @@ export interface BaseItemDto {
      */
     'Album'?: string | null;
     /**
-     * Gets or sets the type of the collection.
-     * @type {string}
+     * 
+     * @type {CollectionType}
      * @memberof BaseItemDto
      */
-    'CollectionType'?: string | null;
+    'CollectionType'?: CollectionType;
     /**
      * Gets or sets the display order.
      * @type {string}
@@ -604,7 +656,7 @@ export interface BaseItemDto {
      */
     'ParentLogoImageTag'?: string | null;
     /**
-     * Gets or sets wether the item has fan art, this will hold the Id of the Parent that has one.
+     * Gets or sets whether the item has fan art, this will hold the Id of the Parent that has one.
      * @type {string}
      * @memberof BaseItemDto
      */
@@ -664,6 +716,12 @@ export interface BaseItemDto {
      */
     'Chapters'?: Array<ChapterInfo> | null;
     /**
+     * Gets or sets the trickplay manifest.
+     * @type {{ [key: string]: { [key: string]: TrickplayInfo; }; }}
+     * @memberof BaseItemDto
+     */
+    'Trickplay'?: { [key: string]: { [key: string]: TrickplayInfo; }; } | null;
+    /**
      * 
      * @type {LocationType}
      * @memberof BaseItemDto
@@ -676,11 +734,11 @@ export interface BaseItemDto {
      */
     'IsoType'?: IsoType;
     /**
-     * Gets or sets the type of the media.
-     * @type {string}
+     * 
+     * @type {MediaType}
      * @memberof BaseItemDto
      */
-    'MediaType'?: string | null;
+    'MediaType'?: MediaType;
     /**
      * Gets or sets the end date.
      * @type {string}
@@ -940,10 +998,18 @@ export interface BaseItemDto {
      */
     'TimerId'?: string | null;
     /**
+     * Gets or sets the gain required for audio normalization.
+     * @type {number}
+     * @memberof BaseItemDto
+     */
+    'NormalizationGain'?: number | null;
+    /**
      * 
      * @type {BaseItemDto}
      * @memberof BaseItemDto
      */
     'CurrentProgram'?: BaseItemDto;
 }
+
+
 

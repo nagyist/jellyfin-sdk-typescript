@@ -12,7 +12,9 @@
  */
 
 
-import { DeviceProfile } from './device-profile';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { DeviceProfile } from './device-profile';
 
 /**
  * Plabyback info dto.
@@ -110,5 +112,11 @@ export interface PlaybackInfoDto {
      * @memberof PlaybackInfoDto
      */
     'AutoOpenLiveStream'?: boolean | null;
+    /**
+     * Gets or sets a value indicating whether always burn in subtitles when transcoding.
+     * @type {boolean}
+     * @memberof PlaybackInfoDto
+     */
+    'AlwaysBurnInSubtitleWhenTranscoding'?: boolean | null;
 }
 

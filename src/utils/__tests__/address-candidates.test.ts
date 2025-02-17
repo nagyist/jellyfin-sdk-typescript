@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { describe, it, expect } from 'vitest';
 
 import { getAddressCandidates } from '..';
 
@@ -32,10 +33,24 @@ describe('Address Candidates', () => {
 		});
 
 		it('should use the specified port when provided', () => {
-			const candidates = getAddressCandidates('http://example.com:8888');
+			const candidates = getAddressCandidates('example.com:8888');
 			expect(candidates).toHaveLength(2);
 			expect(candidates[0]).toBe('https://example.com:8888/');
 			expect(candidates[1]).toBe('http://example.com:8888/');
+		});
+
+		it('should return a single candidate when protocol and port are specified', () => {
+			let candidates = getAddressCandidates('https://example.com:443');
+			expect(candidates).toHaveLength(1);
+			expect(candidates[0]).toBe('https://example.com/');
+
+			candidates = getAddressCandidates('http://example.com:80');
+			expect(candidates).toHaveLength(1);
+			expect(candidates[0]).toBe('http://example.com/');
+
+			candidates = getAddressCandidates('http://example.com:8096');
+			expect(candidates).toHaveLength(1);
+			expect(candidates[0]).toBe('http://example.com:8096/');
 		});
 
 		it('should return an empty list for urls with non http(s) protocols', () => {

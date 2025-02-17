@@ -12,11 +12,15 @@
  */
 
 
-import { DlnaProfileType } from './dlna-profile-type';
-import { ProfileCondition } from './profile-condition';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { DlnaProfileType } from './dlna-profile-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ProfileCondition } from './profile-condition';
 
 /**
- * 
+ * Defines the MediaBrowser.Model.Dlna.ContainerProfile.
  * @export
  * @interface ContainerProfile
  */
@@ -28,16 +32,24 @@ export interface ContainerProfile {
      */
     'Type'?: DlnaProfileType;
     /**
-     * 
+     * Gets or sets the list of MediaBrowser.Model.Dlna.ProfileCondition which this container will be applied to.
      * @type {Array<ProfileCondition>}
      * @memberof ContainerProfile
      */
-    'Conditions'?: Array<ProfileCondition> | null;
+    'Conditions'?: Array<ProfileCondition>;
     /**
-     * 
+     * Gets or sets the container(s) which this container must meet.
      * @type {string}
      * @memberof ContainerProfile
      */
-    'Container'?: string;
+    'Container'?: string | null;
+    /**
+     * Gets or sets the sub container(s) which this container must meet.
+     * @type {string}
+     * @memberof ContainerProfile
+     */
+    'SubContainer'?: string | null;
 }
+
+
 
